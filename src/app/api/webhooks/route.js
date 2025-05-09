@@ -1,4 +1,7 @@
+import { clerkClient } from "@clerk/nextjs/dist/types/server";
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
+import { deleteUser } from "../actions/user";
+import { createOrUpdateUser } from "../actions/user";
 
 export async function POST(req) {
   try {
@@ -6,23 +9,53 @@ export async function POST(req) {
 
     // Do something with payload
     // For this guide, log payload to console
-    const { id } = evt.data;
-    const eventType = evt.type;
+    const { id } = evt?.data;
+    const eventType = evt?.type;
     console.log(
       `Received webhook with ID ${id} and event type of ${eventType}`
     );
     console.log("Webhook payload:", evt.data);
 
-    if (evt.type === "user.created") {
-      console.log("User Created");
+    if (eventType === "user.created" || eventType === "user.updated") {
+      const { id, first_name, last_name, email_addresses, username } =
+        evt?.data;
+
+      try {
+        const user = await createOrUpdateUser(
+          id,
+          first_name,
+          last_name,
+          image_url,
+          email_addresses,
+          username
+        );
+
+        if (user && eventType === "user.created") {
+          try {
+            await clerkClient.users.updateUserMetadata(id, {
+              publicMetadata: {
+                userMongoId: user._id,
+                isAdmin: user.isAdmin,
+              },
+            });
+          } catch (error) {
+            console.log("Error updating user metadata", error);
+          }
+        }
+      } catch (error) {
+        console.log("Error creating or updating user", error);
+        return new Response("Error occured", { status: 400 });
+      }
     }
 
-    if (evt.type === "user.updated") {
-      console.log("User Updated");
-    }
-
-    if (evt.type === "user.deleted") {
-      console.log("User Deleted");
+    if(eventType === "user.deleted"){
+      const {id} = evt?.data;
+      try{
+        await deleteUser(id);
+      }catch(error){
+        console.log("Error deleting user", error);
+        return new Response("Error occured", { status: 400 });
+      }
     }
 
     return new Response("Webhook received", { status: 200 });
