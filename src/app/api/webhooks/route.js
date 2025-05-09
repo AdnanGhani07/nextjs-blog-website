@@ -45,11 +45,16 @@ export default async function handler(req, res) {
 
         if (user && type === "user.created") {
           try {
+            const userData = {
+              userMongoId: user._id,
+              isAdmin: user.isAdmin,
+            };
+            
+            // Ensure it's a plain object
+            const plainUserData = JSON.parse(JSON.stringify(userData));
+              
             await clerkClient.users.updateUserMetadata(id, {
-              publicMetadata: {
-                userMongoId: user._id,
-                isAdmin: user.isAdmin,
-              },
+              publicMetadata: plainUserData,
             });
           } catch (error) {
             console.log("Error updating user metadata", error);
