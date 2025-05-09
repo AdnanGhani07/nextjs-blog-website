@@ -3,10 +3,9 @@ import { Webhook } from "@clerk/clerk-sdk-node";
 import { deleteUser } from "@/lib/actions/user";
 import { createOrUpdateUser } from "@/lib/actions/user";
 
-const webhook = new Webhook(process.env.NEXT_PUBLIC_CLERK_WEBHOOK_SECRET);
 export async function POST(req) {
 
-  
+  const webhook = new Webhook(process.env.NEXT_PUBLIC_CLERK_WEBHOOK_SECRET);
   try {
     const evt = await webhook.verify(req);
 
