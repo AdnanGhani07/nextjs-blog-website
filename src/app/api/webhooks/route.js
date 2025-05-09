@@ -2,28 +2,26 @@ import { clerkClient } from "@clerk/clerk-sdk-node";
 // import { Webhook } from "@clerk/clerk-sdk-node"; 
 import { deleteUser } from "@/lib/actions/user";
 import { createOrUpdateUser } from "@/lib/actions/user";
-import { verifyWebhookSignature } from "@clerk/clerk-sdk-node"; // Correct method to verify webhook
+import { verifyWebhookSignature } from '@clerk/express';
 
-export async function POST(req) {
-  const signature = req.headers.get("clerk-signature");
-  const body = await req.text();
+export default async function handler(req, res) {
+  const signature = req.headers['clerk-signature'];
+  const body = JSON.stringify(req.body); // Ensure the body is in the correct format
 
   try {
-    // Verify webhook signature
+    // Verifying the webhook signature
     const isValid = verifyWebhookSignature({
       body,
       signature,
-      secret: process.env.CLERK_WEBHOOK_SECRET, // Ensure the secret is correct
+      secret: process.env.CLERK_WEBHOOK_SECRET,
     });
 
     if (!isValid) {
-      return new Response("Invalid signature", { status: 400 });
+      return res.status(400).send('Invalid signature');
     }
 
-    // Parse the JSON body
-    const event = JSON.parse(body);
-
-    // Handle the event (for example, user created or updated)
+    // Process the event
+    const event = req.body;
     const { id, type } = event.data;
     console.log(
       `Received webhook with ID ${id} and event type of ${type}`
@@ -59,7 +57,7 @@ export async function POST(req) {
         }
       } catch (error) {
         console.log("Error creating or updating user", error);
-        return new Response("Error occured", { status: 400 });
+        return res.status(400).send('Error creating or updating user');
       }
     }
 
@@ -69,13 +67,13 @@ export async function POST(req) {
         await deleteUser(id);
       }catch(error){
         console.log("Error deleting user", error);
-        return new Response("Error occured", { status: 400 });
+        return res.status(400).send('Error deleting user');
       }
     }
 
-    return new Response("Webhook received", { status: 200 });
+    return res.status(200).send('Webhook received');
   } catch (err) {
     console.error("Error verifying webhook:", err);
-    return new Response("Error verifying webhook", { status: 400 });
+    return res.status(400).send('Error verifying webhook');
   }
 }
