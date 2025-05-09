@@ -1,27 +1,39 @@
 import { clerkClient } from "@clerk/clerk-sdk-node";
-import { Webhook } from "@clerk/clerk-sdk-node"; 
+// import { Webhook } from "@clerk/clerk-sdk-node"; 
 import { deleteUser } from "@/lib/actions/user";
 import { createOrUpdateUser } from "@/lib/actions/user";
+import { verifyWebhookSignature } from "@clerk/clerk-sdk-node"; // Correct method to verify webhook
 
 export async function POST(req) {
+  const signature = req.headers.get("clerk-signature");
+  const body = await req.text();
 
-  const webhook = new Webhook(process.env.NEXT_PUBLIC_CLERK_WEBHOOK_SECRET);
   try {
-    const evt = await webhook.verify(req);
+    // Verify webhook signature
+    const isValid = verifyWebhookSignature({
+      body,
+      signature,
+      secret: process.env.CLERK_WEBHOOK_SECRET, // Ensure the secret is correct
+    });
 
-    // Do something with payload
-    // For this guide, log payload to console
-    const { id } = evt?.data; 
-    const eventType = evt?.type;
+    if (!isValid) {
+      return new Response("Invalid signature", { status: 400 });
+    }
+
+    // Parse the JSON body
+    const event = JSON.parse(body);
+
+    // Handle the event (for example, user created or updated)
+    const { id, type } = event.data;
     console.log(
-      `Received webhook with ID ${id} and event type of ${eventType}`
+      `Received webhook with ID ${id} and event type of ${type}`
     );
-    console.log("Webhook payload:", evt.data);
+    console.log("Webhook payload:", event.data);
 
-    if (eventType === "user.created" || eventType === "user.updated") {
-      const emailList = evt?.data?.email_addresses?.map(e => e.email_address);
+    if (type === "user.created" || type === "user.updated") {
+      const emailList = event?.data?.email_addresses?.map(e => e.email_address);
       const { id, first_name, last_name, username, image_url } =
-        evt?.data;
+        event?.data;
 
       try {
         const user = await createOrUpdateUser(
@@ -33,7 +45,7 @@ export async function POST(req) {
           username
         );
 
-        if (user && eventType === "user.created") {
+        if (user && type === "user.created") {
           try {
             await clerkClient.users.updateUserMetadata(id, {
               publicMetadata: {
@@ -51,8 +63,8 @@ export async function POST(req) {
       }
     }
 
-    if(eventType === "user.deleted"){
-      const {id} = evt?.data;
+    if(type === "user.deleted"){
+      const {id} = event?.data;
       try{
         await deleteUser(id);
       }catch(error){
