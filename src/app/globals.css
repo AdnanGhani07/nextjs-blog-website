@@ -4,8 +4,6 @@
 
 body {
   height: 100vh;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 .ql-editor {
