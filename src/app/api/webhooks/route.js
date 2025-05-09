@@ -1,11 +1,13 @@
 import { clerkClient } from "@clerk/clerk-sdk-node";
-import { verifyWebhook } from "@clerk/nextjs/webhooks";
+import { Webhook } from "@clerk/clerk-sdk-node"; 
 import { deleteUser } from "@/lib/actions/user";
 import { createOrUpdateUser } from "@/lib/actions/user";
 
 export async function POST(req) {
+
+  const webhook = new Webhook(process.env.NEXT_PUBLIC_CLERK_WEBHOOK_SECRET);
   try {
-    const evt = await verifyWebhook(req);
+    const evt = await webhook.verify(req);
 
     // Do something with payload
     // For this guide, log payload to console
