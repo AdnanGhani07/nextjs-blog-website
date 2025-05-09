@@ -1,11 +1,12 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
+import { verifyWebhookSignature } from "@clerk/clerk-sdk-node";
 import { deleteUser } from "@/lib/actions/user";
 import { createOrUpdateUser } from "@/lib/actions/user";
 
 export async function POST(req) {
   try {
-    const evt = await verifyWebhook(req);
+    const evt = await verifyWebhookSignature(req);
 
     // Do something with payload
     // For this guide, log payload to console
