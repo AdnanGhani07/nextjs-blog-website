@@ -22,16 +22,17 @@ export default async function handler(req, res) {
 
     // Process the event
     const event = body;
-    const { id, type } = event.data;
+    const plainEvent = JSON.parse(JSON.stringify(event));
+    const { id, type } = plainEvent.data;
     console.log(
       `Received webhook with ID ${id} and event type of ${type}`
     );
-    console.log("Webhook payload:", event.data);
+    console.log("Webhook payload:", plainEvent.data);
 
     if (type === "user.created" || type === "user.updated") {
-      const emailList = event?.data?.email_addresses?.map(e => e.email_address);
+      const emailList = plainEvent?.data?.email_addresses?.map(e => e.email_address);
       const { id, first_name, last_name, username, image_url } =
-        event?.data;
+        plainEvent?.data;
 
       try {
         const user = await createOrUpdateUser(
@@ -67,7 +68,7 @@ export default async function handler(req, res) {
     }
 
     if(type === "user.deleted"){
-      const {id} = event?.data;
+      const {id} = plainEvent?.data;
       try{
         await deleteUser(id);
       }catch(error){
