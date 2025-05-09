@@ -1,5 +1,5 @@
 import { clerkClient } from "@clerk/nextjs/server";
-import { verifyWebhook } from "@clerk/nextjs/webhooks";
+// import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { verifyWebhookSignature } from "@clerk/clerk-sdk-node";
 import { deleteUser } from "@/lib/actions/user";
 import { createOrUpdateUser } from "@/lib/actions/user";
