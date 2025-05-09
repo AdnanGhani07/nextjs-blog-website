@@ -156,15 +156,23 @@ export async function POST(req) {
         username
       );
       if (user && eventType === 'user.created') {
+        console.log('Attempting to update Clerk public metadata...');
         try {
-          await clerkClient.users.updateUserMetadata(id, {
-            publicMetadata: {
-              userMongoId: user._id,
-              isAdmin: user.isAdmin,
-            },
+          const metadataPayload = {
+            userMongoId: user._id.toString?.() ?? String(user._id),
+            isAdmin: user.isAdmin,
+          };
+      
+          console.log('Sending metadata to Clerk:', metadataPayload);
+      
+          const result = await clerkClient.users.updateUserMetadata(id, {
+            publicMetadata: metadataPayload,
           });
+      
+          console.log('Clerk update response:', result);
         } catch (error) {
-          console.log('Error updating user metadata:', error);
+          console.error('Failed to update Clerk metadata:', error);
+          return new Response('Metadata update failed', { status: 500 });
         }
       }
     } catch (error) {
