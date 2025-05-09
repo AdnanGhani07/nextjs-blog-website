@@ -6,7 +6,7 @@ import { verifyWebhookSignature } from '@clerk/express';
 
 export default async function handler(req, res) {
   const signature = req.headers['clerk-signature'];
-  const body = JSON.stringify(req.body); // Ensure the body is in the correct format
+  const body = JSON.parse(JSON.stringify(req.body)); // Ensure the body is in the correct format
 
   try {
     // Verifying the webhook signature
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     }
 
     // Process the event
-    const event = req.body;
+    const event = body;
     const { id, type } = event.data;
     console.log(
       `Received webhook with ID ${id} and event type of ${type}`
