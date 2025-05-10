@@ -100,6 +100,11 @@ export default function Header() {
             Collections
           </Navbar.Link>
         </Link>
+        <Link href="/dashboard/create-post">
+          <Navbar.Link active={path === "/create-post"} as={"div"}>
+            Create Post
+          </Navbar.Link>
+        </Link>
       </Navbar.Collapse>
     </Navbar>
   );
