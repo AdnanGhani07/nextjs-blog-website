@@ -62,8 +62,8 @@ export default function FooterCom() {
             <div>
               <Footer.Title title='Essentials' />
               <Footer.LinkGroup col>
-                <Footer.Link href='#'>Privacy & Solitude</Footer.Link>
-                <Footer.Link href='#'>Terms of Thought</Footer.Link>
+                <Footer.Link href='/privacy'>Privacy & Solitude</Footer.Link>
+                <Footer.Link href='/terms'>Terms of Thought</Footer.Link>
               </Footer.LinkGroup>
             </div>
           </div>
