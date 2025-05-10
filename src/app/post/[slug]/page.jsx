@@ -1,6 +1,8 @@
 import CallToAction from '@/components/CallToAction';
 import { Button } from 'flowbite-react';
 import Link from 'next/link';
+import RecentPosts from '@/components/RecentPosts';
+
 export default async function PostPage({ params }) {
   let post = null;
   try {
@@ -20,9 +22,6 @@ export default async function PostPage({ params }) {
         <h2 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>
           Post not found
         </h2>
-        <div className='max-w-4xl mx-auto w-full'>
-        <CallToAction />
-      </div>
       </main>
     );
   }
@@ -57,6 +56,7 @@ export default async function PostPage({ params }) {
       <div className='max-w-4xl mx-auto w-full'>
         <CallToAction />
       </div>
+      <RecentPosts limit={3} />
     </main>
   );
 }
