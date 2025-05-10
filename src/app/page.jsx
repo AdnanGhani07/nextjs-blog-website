@@ -39,7 +39,7 @@ export default async function Home() {
           href='/search'
           className='text-sm dark:text-teal-300 text-teal-800 font-semibold hover:underline'
         >
-          Browse the archive
+          Browse The Archive
         </Link>
       </div>
 
@@ -53,7 +53,7 @@ export default async function Home() {
           href='/search?category=null'
           className='text-md dark:text-teal-300 text-teal-800 hover:underline text-center'
         >
-          See all writings
+          See All Writings
         </Link>
       </div>
     </div>

@@ -14,7 +14,7 @@ export default async function RecentPosts({limit}) {
   }
   return (
     <div className='flex flex-col justify-center items-center mb-5'>
-      <h1 className='text-xl mt-5'>Recent articles</h1>
+      <h1 className='text-xl mt-5 text-teal-800 dark:text-teal-300 font-semibold'>Recent Articles</h1>
       <div className='flex flex-wrap gap-5 mt-5 justify-center'>
         {posts && posts.map((post) => <PostCard key={post._id} post={post} />)}
       </div>
