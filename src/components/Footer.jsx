@@ -3,11 +3,9 @@
 import { Footer } from 'flowbite-react';
 import Link from 'next/link';
 import {
-  BsFacebook,
   BsInstagram,
   BsTwitter,
   BsGithub,
-  BsDribbble,
 } from 'react-icons/bs';
 
 export default function FooterCom() {
@@ -56,7 +54,6 @@ export default function FooterCom() {
                 >
                   GitHub
                 </Footer.Link>
-                <Footer.Link href='#'>Discord</Footer.Link>
               </Footer.LinkGroup>
             </div>
             <div>
@@ -76,14 +73,12 @@ export default function FooterCom() {
             year={new Date().getFullYear()}
           />
           <div className='flex gap-6 mt-4 sm:mt-0 sm:justify-center'>
-            <Footer.Icon href='#' icon={BsFacebook} />
-            <Footer.Icon href='#' icon={BsInstagram} />
-            <Footer.Icon href='#' icon={BsTwitter} />
+            <Footer.Icon href='https://instagram.com/__mikaelson__' icon={BsInstagram} />
+            <Footer.Icon href='https://x.com/Adnan_Ghani_7' icon={BsTwitter} />
             <Footer.Icon
               href='https://github.com/AdnanGhani07'
               icon={BsGithub}
             />
-            <Footer.Icon href='#' icon={BsDribbble} />
           </div>
         </div>
       </div>
