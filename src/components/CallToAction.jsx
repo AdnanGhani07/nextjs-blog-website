@@ -11,7 +11,7 @@ export default function CallToAction() {
           Explore a curated collection of thought-provoking poems, introspective journals, and heartfelt stories from writers across the world.
         </p>
         <Button gradientDuoTone='purpleToPink' className='rounded-tl-xl rounded-bl-none mt-2'>
-          <a href="https://www.modernpoetryarchive.com" target='_blank' rel='noopener noreferrer'>
+          <a href="https://www.poetryarchive.org" target='_blank' rel='noopener noreferrer'>
             Discover Literary Treasures
           </a>
         </Button>
