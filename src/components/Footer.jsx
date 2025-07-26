@@ -19,9 +19,8 @@ export default function FooterCom() {
               className='self-center whitespace-nowrap text-xl font-serif font-semibold dark:text-white'
             >
               <span className='px-2 py-1 bg-gradient-to-r from-pink-500 via-rose-400 to-amber-300 rounded-md text-white'>
-                Adnan's
+                Woven Words
               </span>{' '}
-              Blog
             </Link>
           </div>
           <div className='grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6 text-sm'>
@@ -69,7 +68,7 @@ export default function FooterCom() {
         <div className='w-full sm:flex sm:items-center sm:justify-between text-sm'>
           <Footer.Copyright
             href='#'
-            by="Adnan's Blog"
+            by="Woven Words"
             year={new Date().getFullYear()}
           />
           <div className='flex gap-6 mt-4 sm:mt-0 sm:justify-center'>
