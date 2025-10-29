@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.js Blog Website
 
-## Getting Started
+A modern, fast blog built with Next.js and JavaScript — focused on SEO, performance and a smooth writing experience.
 
-First, run the development server:
+## Tech Stack
+- Next.js (React)
+- React
+- Tailwind CSS / PostCSS
+- Clerk (authentication & UI themes)
+- MongoDB (mongodb driver) + Mongoose (ODM)
+- Firebase (optional integration)
+- React Quill (rich text editor)
+- react-icons
+- Svix (webhook client)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
+- File-based routing with Next.js
+- Authentication and user management with Clerk
+- Rich-text post editing
+- Image optimization and responsive UI
+- MongoDB-backed persistence (Mongoose)
+- Optional Firebase integration (if present in project code)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Quickstart — run locally
+1. Clone
+   git clone https://github.com/AdnanGhani07/nextjs-blog-website.git
+2. Install dependencies
+   cd nextjs-blog-website
+   npm install
+   (or yarn / pnpm install)
+3. Environment
+   - Copy example if present:
+     cp .env.example .env.local
+   - Typical env variables you may need:
+     - MONGODB_URI=your_mongodb_connection_string
+     - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY (Clerk)
+     - CLERK_SECRET_KEY (server-side Clerk secret)
+     - FIREBASE_* (if Firebase is used)
+     - SVIX_API_KEY (if webhooks are used)
+4. Run dev server
+   npm run dev
+   Open http://localhost:3000
+5. Build & run production
+   npm run build
+   npm run start
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Scripts (from package.json)
+- dev: next dev
+- build: next build
+- start: next start
+- lint: next lint
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project layout (typical)
+- /app or /pages — routes
+- /components — UI components
+- /lib or /utils — helpers and API clients
+- /styles — Tailwind / global CSS
+- /public — static assets
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+- Ensure Node.js version compatible with the Next.js version in this repo.
+- Keep secret keys out of source control; use .env.local for local secrets.
