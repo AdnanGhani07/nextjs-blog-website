@@ -1,4 +1,4 @@
-# Next.js Blog Website
+# Woven Words : A Full Stack Literary Blog
 
 A modern, fast blog built with Next.js and JavaScript — focused on SEO, performance and a smooth writing experience.
 
