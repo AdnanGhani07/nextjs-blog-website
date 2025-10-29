@@ -47,13 +47,13 @@ A modern, fast blog built with Next.js and JavaScript — focused on SEO, perfor
    npm run build
    npm run start
 
-## Scripts (from package.json)
+## Scripts
 - dev: next dev
 - build: next build
 - start: next start
 - lint: next lint
 
-## Project layout (typical)
+## Project layout
 - /app or /pages — routes
 - /components — UI components
 - /lib or /utils — helpers and API clients
