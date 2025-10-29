@@ -23,12 +23,15 @@ A modern, fast blog built with Next.js and JavaScript — focused on SEO, perfor
 
 ## Quickstart — run locally
 1. Clone
+   
    git clone https://github.com/AdnanGhani07/nextjs-blog-website.git
-2. Install dependencies
+3. Install dependencies
+   
    cd nextjs-blog-website
    npm install
    (or yarn / pnpm install)
-3. Environment
+   
+5. Environment
    - Copy example if present:
      cp .env.example .env.local
    - Typical env variables you may need:
@@ -37,10 +40,10 @@ A modern, fast blog built with Next.js and JavaScript — focused on SEO, perfor
      - CLERK_SECRET_KEY (server-side Clerk secret)
      - FIREBASE_* (if Firebase is used)
      - SVIX_API_KEY (if webhooks are used)
-4. Run dev server
+6. Run dev server
    npm run dev
    Open http://localhost:3000
-5. Build & run production
+7. Build & run production
    npm run build
    npm run start
 
