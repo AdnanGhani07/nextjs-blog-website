@@ -15,7 +15,7 @@
     "flowbite-react": "^0.10.2",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.2",
-    "next": "^15.3.2",
+    "next": "15.3.8",
     "next-themes": "^0.4.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
