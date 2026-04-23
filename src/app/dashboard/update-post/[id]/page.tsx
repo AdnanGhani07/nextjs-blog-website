@@ -123,14 +123,14 @@ export default function UpdatePost() {
           postId: postId,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setPublishError(data.message);
+        setPublishError(data?.message || 'Failed to update post');
         return;
       }
       if (res.ok) {
         setPublishError(null);
-        router.push(`/post/${data.slug}`);
+        router.push(`/post/${data?.slug}`);
       }
     } catch (error) {
       setPublishError('Something went wrong');

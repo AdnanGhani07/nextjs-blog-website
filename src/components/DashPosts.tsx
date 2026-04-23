@@ -26,7 +26,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
 export default function DashPosts() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState('');
@@ -52,10 +52,10 @@ export default function DashPosts() {
         console.log(error.message);
       }
     };
-    if (user?.publicMetadata?.isAdmin) {
+    if (isLoaded && user?.publicMetadata?.isAdmin) {
       fetchPosts();
     }
-  }, [user?.publicMetadata?.isAdmin, user?.publicMetadata?.userMongoId]);
+  }, [isLoaded, user?.publicMetadata?.isAdmin, user?.publicMetadata?.userMongoId]);
 
   const handleDeletePost = async () => {
     setShowModal(false);
@@ -78,13 +78,26 @@ export default function DashPosts() {
         setUserPosts(newPosts);
         setPostIdToDelete('');
       } else {
-        const data = await res.json();
-        console.log(data.message);
+        const errorText = await res.text().catch(() => 'Unknown error');
+        try {
+          const data = JSON.parse(errorText);
+          console.error('Delete failed:', data.message || errorText);
+        } catch {
+          console.error('Delete failed:', errorText);
+        }
       }
     } catch (error: any) {
       console.log(error.message);
     }
   };
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px] w-full">
+        <div className="animate-spin h-8 w-8 border-4 border-[#740001]/20 border-t-[#740001] rounded-full" />
+      </div>
+    );
+  }
 
   if (!user?.publicMetadata?.isAdmin) {
     return (

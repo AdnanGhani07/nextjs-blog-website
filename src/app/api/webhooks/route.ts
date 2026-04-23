@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
-      'Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local'
+      'Please add CLERK_WEBHOOK_SIGNING_SECRET from Clerk Dashboard to .env or .env.local'
     );
   }
 
@@ -24,8 +24,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const payload = await req.json();
-  const body = JSON.stringify(payload);
+  const body = await req.text();
 
   const wh = new Webhook(WEBHOOK_SECRET);
 

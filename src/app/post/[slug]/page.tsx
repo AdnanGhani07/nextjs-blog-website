@@ -8,6 +8,9 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { GiQuillInk, GiScrollUnfurled, GiInkSwirl } from "react-icons/gi";
 
+import { notFound } from "next/navigation";
+import DOMPurify from "isomorphic-dompurify";
+
 export default async function PostPage(props: {
   params: Promise<{ slug: string }>;
 }) {
@@ -19,30 +22,13 @@ export default async function PostPage(props: {
     post = await Post.findOne({ slug });
   } catch (error) {
     console.log("Error fetching post:", error);
-    post = { title: "Failed to load post" };
   }
 
   if (!post || post.title === "Failed to load post") {
-    return (
-      <main className="p-6 flex flex-col max-w-4xl mx-auto min-h-screen text-center py-32">
-        <GiInkSwirl className="h-16 w-16 text-[#d3a625]/20 mx-auto mb-6" />
-        <h2 className="font-cinzel text-4xl font-bold text-[#1a0f0a]">
-          Scroll Not Found
-        </h2>
-        <p className="font-serif italic text-lg text-[#1a0f0a]/60 mt-4">
-          The archives are silent on this matter.
-        </p>
-        <Link href="/" className="mt-10">
-          <Button
-            variant="outline"
-            className="font-cinzel font-bold tracking-widest border-4 border-double border-[#740001] text-[#740001]"
-          >
-            Return to Ledger
-          </Button>
-        </Link>
-      </main>
-    );
+    notFound();
   }
+
+  const sanitizedContent = DOMPurify.sanitize(post.content ?? "");
 
   return (
     <main className="flex flex-col max-w-5xl mx-auto min-h-screen py-20 px-6 relative">
@@ -95,7 +81,7 @@ export default async function PostPage(props: {
       <article className="py-20 font-serif text-xl md:text-2xl leading-[1.8] text-[#1a0f0a] font-medium max-w-3xl mx-auto post-content">
         <div
           className="first-letter:text-7xl first-letter:font-cinzel first-letter:text-[#740001] first-letter:float-left first-letter:mr-3 first-letter:mt-2"
-          dangerouslySetInnerHTML={{ __html: post?.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       </article>
 

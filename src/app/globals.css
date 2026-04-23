@@ -48,16 +48,20 @@
   * {
     @apply border-border selection:bg-primary/30;
   }
+
   body {
     @apply bg-[#f4e4bc] text-[#1a0f0a] font-serif font-medium; /* Forced darker text and medium weight */
+
     background-image: linear-gradient(rgba(244, 228, 188, 0.5), rgba(244, 228, 188, 0.5)), url('/parchment-bg.png');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
   }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-cinzel tracking-wider uppercase font-black text-[#1a0f0a];
+
     text-shadow: 1px 1px 1px rgba(0,0,0,0.15);
   }
 }
@@ -69,6 +73,7 @@
   
   .ink-text {
     @apply text-[#1a0f0a] font-bold leading-relaxed;
+
     font-family: var(--font-playfair);
   }
 
@@ -81,20 +86,24 @@
 ::-webkit-scrollbar {
   width: 12px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f4e4bc;
-  border-left: 1px solid #d3a625/40;
+  border-left: 1px solid rgba(211, 166, 37, 0.4);
 }
+
 ::-webkit-scrollbar-thumb {
   background: #740001;
   border: 3px solid #f4e4bc;
   border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #1a0f0a;
 }
 
 .ql-editor {
   @apply font-serif text-xl leading-loose font-medium text-[#1a0f0a];
+
   background: transparent !important;
 }

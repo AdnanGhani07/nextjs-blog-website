@@ -11,7 +11,7 @@ export default async function RecentPosts({ limit }: RecentPostsProps) {
   try {
     await connect();
     // Fetch directly from DB
-    posts = await Post.find().sort({ updatedAt: -1 }).limit(limit);
+    posts = await Post.find().sort({ updatedAt: -1 }).limit(limit).lean();
   } catch (error) {
     console.log("Error getting post:", error);
   }

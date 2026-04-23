@@ -13,7 +13,7 @@ export const PUT = async (req: NextRequest) => {
       user.publicMetadata.userMongoId !== data.userMongoId ||
       user.publicMetadata.isAdmin !== true
     ) {
-      return new NextResponse('Unauthorized', {
+      return NextResponse.json({ message: 'Unauthorized' }, {
         status: 401,
       });
     }
@@ -34,17 +34,17 @@ export const PUT = async (req: NextRequest) => {
     );
 
     if (!newPost) {
-      return new NextResponse('Post not found', {
+      return NextResponse.json({ message: 'Post not found' }, {
         status: 404,
       });
     }
 
-    return new NextResponse(JSON.stringify(newPost), {
+    return NextResponse.json(newPost, {
       status: 200,
     });
   } catch (error) {
     console.log('Error updating post:', error);
-    return new NextResponse('Error updating post', {
+    return NextResponse.json({ message: 'Error updating post' }, {
       status: 500,
     });
   }
