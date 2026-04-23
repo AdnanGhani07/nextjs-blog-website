@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PostCard from '@/components/PostCard';
 import { Button } from '@/components/ui/button';
@@ -13,12 +13,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { GiScrollUnfurled, GiMagnifyingGlass } from 'react-icons/gi';
 
-export default function Search() {
+function SearchContent() {
   const [sidebarData, setSidebarData] = useState({
     searchTerm: '',
     sort: 'desc',
-    category: 'uncategorized',
+    category: 'all',
   });
 
   const [posts, setPosts] = useState<any[]>([]);
@@ -37,7 +38,7 @@ export default function Search() {
       setSidebarData({
         searchTerm: searchTermFromUrl || '',
         sort: sortFromUrl || 'desc',
-        category: categoryFromUrl || 'uncategorized',
+        category: categoryFromUrl || 'all',
       });
     }
 
@@ -51,7 +52,7 @@ export default function Search() {
         body: JSON.stringify({
           limit: 9,
           order: sortFromUrl || 'desc',
-          category: categoryFromUrl || 'uncategorized',
+          category: (categoryFromUrl === 'all' || !categoryFromUrl) ? '' : categoryFromUrl,
           searchTerm: searchTermFromUrl || '',
         }),
       });
@@ -94,7 +95,7 @@ export default function Search() {
       body: JSON.stringify({
         limit: 9,
         order: sidebarData.sort,
-        category: sidebarData.category,
+        category: sidebarData.category === 'all' ? '' : sidebarData.category,
         searchTerm: sidebarData.searchTerm,
         startIndex,
       }),
@@ -114,80 +115,96 @@ export default function Search() {
   };
 
   return (
-    <div className='flex flex-col md:flex-row min-h-screen'>
-      <aside className='w-full md:w-80 p-8 border-b md:border-r bg-muted/20'>
+    <div className='flex flex-col md:flex-row min-h-screen relative'>
+      <div className="absolute inset-0 bg-[#2c1e16]/5 pointer-events-none" />
+      
+      <aside className='w-full md:w-80 p-8 border-b-4 md:border-b-0 md:border-r-4 border-double border-[#d3a625]/30 relative z-10'>
+        <div className="mb-8 flex items-center gap-3 border-b-2 border-[#d3a625]/20 pb-4">
+           <GiMagnifyingGlass className="h-6 w-6 text-[#740001]" />
+           <h2 className="font-cinzel text-xl font-bold text-[#2c1e16]">Filter Archives</h2>
+        </div>
+
         <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
           <div className='space-y-3'>
-            <Label htmlFor='searchTerm' className='text-sm font-bold uppercase tracking-wider text-muted-foreground'>
-              Search Term
+            <Label htmlFor='searchTerm' className='font-cinzel text-xs font-bold uppercase tracking-[0.2em] text-[#2c1e16]/60'>
+              Search Query
             </Label>
             <Input
-              placeholder='Search posts...'
+              placeholder='Keywords...'
               id='searchTerm'
               type='text'
               value={sidebarData.searchTerm}
               onChange={(e) => setSidebarData({ ...sidebarData, searchTerm: e.target.value })}
-              className='bg-background'
+              className='bg-white/50 border-b-2 border-t-0 border-x-0 border-[#d3a625]/30 rounded-none focus-visible:ring-0 focus-visible:border-[#740001] font-serif italic'
             />
           </div>
 
           <div className='space-y-3'>
-            <Label htmlFor='sort' className='text-sm font-bold uppercase tracking-wider text-muted-foreground'>
-              Sort By
+            <Label htmlFor='sort' className='font-cinzel text-xs font-bold uppercase tracking-[0.2em] text-[#2c1e16]/60'>
+              Chronology
             </Label>
             <Select 
               value={sidebarData.sort}
               onValueChange={(value) => setSidebarData({ ...sidebarData, sort: value })}
             >
-              <SelectTrigger id='sort' className='bg-background'>
+              <SelectTrigger id='sort' className='bg-white/50 border-b-2 border-t-0 border-x-0 border-[#d3a625]/30 rounded-none focus:ring-0'>
                 <SelectValue placeholder='Select order' />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='desc'>Latest</SelectItem>
-                <SelectItem value='asc'>Oldest</SelectItem>
+              <SelectContent className="bg-[#f4e4bc] border-[#d3a625]/30">
+                <SelectItem value='desc'>Newest Dispatches</SelectItem>
+                <SelectItem value='asc'>Ancient Scrolls</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className='space-y-3'>
-            <Label htmlFor='category' className='text-sm font-bold uppercase tracking-wider text-muted-foreground'>
-              Category
+            <Label htmlFor='category' className='font-cinzel text-xs font-bold uppercase tracking-[0.2em] text-[#2c1e16]/60'>
+              Thematic Circle
             </Label>
             <Select 
               value={sidebarData.category}
               onValueChange={(value) => setSidebarData({ ...sidebarData, category: value })}
             >
-              <SelectTrigger id='category' className='bg-background'>
+              <SelectTrigger id='category' className='bg-white/50 border-b-2 border-t-0 border-x-0 border-[#d3a625]/30 rounded-none focus:ring-0'>
                 <SelectValue placeholder='Select category' />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#f4e4bc] border-[#d3a625]/30">
+                <SelectItem value='all'>All Scrolls</SelectItem>
                 <SelectItem value='uncategorized'>Uncategorized</SelectItem>
-                <SelectItem value='poem'>Poem</SelectItem>
-                <SelectItem value='journal'>Journal</SelectItem>
-                <SelectItem value='article'>Article</SelectItem>
+                <SelectItem value='poem'>Poetry & Verses</SelectItem>
+                <SelectItem value='journal'>Personal Journals</SelectItem>
+                <SelectItem value='article'>Library Articles</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <Button type='submit' size='lg' className='w-full font-bold shadow-lg bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 transition-opacity'>
-            Apply Filters
+          <Button type='submit' size='lg' className='w-full font-cinzel font-bold tracking-widest bg-[#740001] hover:bg-[#2c1e16] text-white shadow-lg transition-all rounded-none h-12'>
+            Examine the Tomes
           </Button>
         </form>
       </aside>
 
-      <main className='flex-1 p-8'>
-        <h1 className='text-3xl font-bold border-b pb-6 mb-8'>
-          Search Results
-        </h1>
-        <div className='grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6'>
+      <main className='flex-1 p-8 relative z-10'>
+        <div className="mb-12 border-b-2 border-[#d3a625]/20 pb-6 flex justify-between items-end">
+           <h1 className='font-cinzel text-4xl font-bold tracking-tighter text-[#2c1e16]'>
+             Recovered Scrolls
+           </h1>
+           <div className="text-[#2c1e16]/40 font-serif italic text-sm">
+             Showing results from the deep archives
+           </div>
+        </div>
+
+        <div className='grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-10'>
           {!loading && posts.length === 0 && (
-            <div className='col-span-full text-center py-20'>
-              <p className='text-2xl text-muted-foreground'>No posts found matching your criteria.</p>
+            <div className='col-span-full text-center py-32'>
+              <GiScrollUnfurled className="h-16 w-16 text-[#d3a625]/20 mx-auto mb-4" />
+              <p className='font-serif text-2xl italic text-[#2c1e16]/40'>Alas, no scrolls match your search criteria.</p>
             </div>
           )}
           {loading && (
-             <div className='col-span-full text-center py-20'>
-               <p className='text-2xl animate-pulse text-muted-foreground'>Searching the archive...</p>
+             <div className='col-span-full text-center py-32'>
+               <div className="animate-spin h-12 w-12 border-4 border-[#740001]/20 border-t-[#740001] rounded-full mx-auto mb-4" />
+               <p className='font-serif text-2xl animate-pulse text-[#2c1e16]/40 italic'>Unrolling the heavy parchments...</p>
              </div>
           )}
           {!loading &&
@@ -196,18 +213,30 @@ export default function Search() {
         </div>
         
         {showMore && (
-          <div className='mt-12 text-center'>
+          <div className='mt-20 text-center'>
             <Button
               variant='ghost'
               size='lg'
               onClick={handleShowMore}
-              className='text-primary hover:text-primary/80 font-bold px-12'
+              className='font-cinzel font-bold tracking-[0.3em] text-[#740001] hover:bg-[#740001]/5 border-2 border-transparent hover:border-[#740001]/20 px-12 h-14'
             >
-              Load More Writings
+              Discover More Fragments
             </Button>
           </div>
         )}
       </main>
     </div>
+  );
+}
+
+export default function Search() {
+  return (
+    <Suspense fallback={
+      <div className='flex items-center justify-center min-h-screen'>
+        <div className="animate-spin h-12 w-12 border-4 border-[#740001]/20 border-t-[#740001] rounded-full" />
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }

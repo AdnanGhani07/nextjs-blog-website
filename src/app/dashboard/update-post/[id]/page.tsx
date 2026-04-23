@@ -56,7 +56,12 @@ export default function UpdatePost() {
         });
         const data = await res.json();
         if (res.ok) {
-          setFormData(data.posts[0]);
+          const post = data.posts?.[0];
+          if (!post) {
+            setPublishError("Post not found");
+            return;
+          }
+          setFormData(post);
         }
       } catch (error: any) {
         console.log(error.message);
@@ -93,7 +98,7 @@ export default function UpdatePost() {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
             setImageUploadError(null);
-            setFormData({ ...formData, image: downloadURL });
+            setFormData((prev: any) => ({ ...prev, image: downloadURL }));
           });
         }
       );
@@ -245,6 +250,7 @@ export default function UpdatePost() {
             <div className="bg-background rounded-md border min-h-[400px]">
               <ReactQuill
                 theme="snow"
+                value={formData.content || ''}
                 placeholder="Unleash your creativity..."
                 className="h-[350px] mb-12"
                 onChange={(value) => {
@@ -254,7 +260,12 @@ export default function UpdatePost() {
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="w-full font-bold text-lg h-12 bg-gradient-to-r from-teal-500 to-emerald-500 hover:opacity-90 transition-opacity">
+          <Button 
+            type="submit" 
+            size="lg" 
+            disabled={!!imageUploadProgress}
+            className="w-full font-bold text-lg h-12 bg-gradient-to-r from-teal-500 to-emerald-500 hover:opacity-90 transition-opacity"
+          >
             Update Post
           </Button>
 

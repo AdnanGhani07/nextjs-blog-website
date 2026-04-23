@@ -75,7 +75,7 @@ export default function CreatePostPage() {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
             setImageUploadError(null);
-            setFormData({ ...formData, image: downloadURL });
+            setFormData((prev: any) => ({ ...prev, image: downloadURL }));
           });
         }
       );
@@ -234,6 +234,7 @@ export default function CreatePostPage() {
             <div className="bg-background rounded-md border min-h-[400px]">
               <ReactQuill
                 theme="snow"
+                value={formData.content || ''}
                 placeholder="Unleash your creativity..."
                 className="h-[350px] mb-12"
                 onChange={(value) => {
@@ -243,7 +244,12 @@ export default function CreatePostPage() {
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="w-full font-bold text-lg h-12 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 transition-opacity">
+          <Button 
+            type="submit" 
+            size="lg" 
+            disabled={!!imageUploadProgress}
+            className="w-full font-bold text-lg h-12 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 transition-opacity"
+          >
             Publish Post
           </Button>
 

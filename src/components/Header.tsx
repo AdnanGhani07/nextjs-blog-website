@@ -3,12 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { AiOutlineSearch } from "react-icons/ai";
-import { FaMoon, FaSun } from "react-icons/fa";
-import { HiMenuAlt3 } from "react-icons/hi";
+import { GiQuillInk, GiScrollUnfurled } from "react-icons/gi";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +19,6 @@ import {
 
 export default function Header() {
   const path = usePathname();
-  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const searchParams = useSearchParams();
@@ -38,38 +34,40 @@ export default function Header() {
   useEffect(() => {
     const urlParams = new URLSearchParams(searchParams.toString());
     const searchTermFromURL = urlParams.get("searchTerm");
-    if (searchTermFromURL) {
-      setSearchTerm(searchTermFromURL);
-    }
+    setSearchTerm(searchTermFromURL ?? "");
   }, [searchParams]);
 
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Collections", href: "/collections" },
-    { name: "Create Post", href: "/dashboard/create-post" },
+    { name: "Write Post", href: "/dashboard/create-post" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between mx-auto px-4">
+    <header className="sticky top-0 z-50 w-full bg-[#f4e4bc] border-b-4 border-double border-[#d3a625] shadow-xl">
+      <div className="container flex h-20 items-center justify-between mx-auto px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xl font-bold transition-all hover:opacity-90"
+          className="flex items-center gap-3 group transition-transform hover:scale-105"
         >
-          <span className="px-3 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white text-lg">
+          <div className="relative">
+            <GiQuillInk className="h-10 w-10 text-[#740001] transition-transform group-hover:-rotate-12" />
+            <div className="absolute -top-1 -right-1 h-3 w-3 bg-[#d3a625] rounded-full shadow-[0_0_8px_#d3a625]" />
+          </div>
+          <span className="font-cinzel text-2xl font-black tracking-widest text-[#2c1e16]">
             Woven Words
           </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                path === link.href ? "text-primary" : "text-muted-foreground"
+              className={`font-cinzel text-sm font-black tracking-wider transition-all hover:text-[#740001] hover:underline decoration-2 underline-offset-8 ${
+                path === link.href ? "text-[#740001] underline decoration-[#740001]" : "text-[#2c1e16]"
               }`}
             >
               {link.name}
@@ -77,91 +75,73 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           {/* Search Bar */}
-          <form onSubmit={handleSubmit} className="hidden lg:flex relative">
-            <AiOutlineSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <form onSubmit={handleSubmit} className="hidden xl:flex relative group">
+            <AiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2c1e16] group-focus-within:text-[#740001]" />
             <Input
               type="search"
-              placeholder="Search..."
-              className="pl-8 w-[200px] lg:w-[300px]"
+              placeholder="Search archives..."
+              className="pl-10 w-[250px] bg-white/30 border-b-2 border-t-0 border-x-0 border-[#d3a625] rounded-none focus-visible:ring-0 focus-visible:border-[#740001] transition-all italic placeholder:text-[#2c1e16]/60 font-serif text-[#2c1e16] font-bold"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </form>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? (
-              <FaSun className="h-5 w-5 text-yellow-400" />
-            ) : (
-              <FaMoon className="h-5 w-5 text-slate-700" />
-            )}
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+          <div className="flex items-center gap-4">
+            <SignedIn>
+              <div className="border-4 border-double border-[#d3a625] rounded-full p-0.5 shadow-md">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: "h-9 w-9",
+                    }
+                  }}
+                  userProfileUrl="/dashboard?tab=profile"
+                />
+              </div>
+            </SignedIn>
 
-          <SignedIn>
-            <UserButton
-              appearance={{
-                baseTheme: theme === "dark" ? dark : undefined,
-              }}
-              userProfileUrl="/dashboard?tab=profile"
-            />
-          </SignedIn>
+            <SignedOut>
+              <Link href="/sign-in">
+                <Button variant="outline" className="font-cinzel font-black tracking-widest border-4 border-double border-[#740001] text-[#740001] hover:bg-[#740001] hover:text-white transition-all bg-white/20">
+                  Sign In
+                </Button>
+              </Link>
+            </SignedOut>
 
-          <SignedOut>
-            <Link href="/sign-in">
-              <Button variant="default" size="sm">
-                Sign In
-              </Button>
-            </Link>
-          </SignedOut>
-
-          {/* Mobile Menu */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger
-                render={
-                  <Button variant="ghost" size="icon">
-                    <HiMenuAlt3 className="h-6 w-6" />
-                  </Button>
-                }
-              />
-              <SheetContent side="right">
-                <SheetHeader>
-                  <SheetTitle className="text-left">Menu</SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col gap-4 mt-8">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={`text-lg font-medium transition-colors hover:text-primary ${
-                        path === link.href
-                          ? "text-primary"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                  <form onSubmit={handleSubmit} className="mt-4 relative">
-                    <AiOutlineSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="search"
-                      placeholder="Search..."
-                      className="pl-8 w-full"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </form>
-                </div>
-              </SheetContent>
-            </Sheet>
+            {/* Mobile Menu */}
+            <div className="lg:hidden">
+              <Sheet>
+                <SheetTrigger
+                  render={
+                    <Button variant="ghost" size="icon" className="hover:bg-[#d3a625]/20 border-2 border-[#d3a625]/50">
+                      <GiScrollUnfurled className="h-8 w-8 text-[#2c1e16]" />
+                    </Button>
+                  }
+                />
+                <SheetContent side="right" className="bg-[#f4e4bc] border-l-8 border-double border-[#d3a625] font-serif">
+                  <SheetHeader>
+                    <SheetTitle className="font-cinzel text-3xl font-black text-left border-b-4 border-double border-[#d3a625] pb-4 text-[#2c1e16]">
+                      Navigation
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-8 mt-10">
+                    {navLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`font-cinzel text-2xl font-black transition-colors hover:text-[#740001] ${
+                          path === link.href ? "text-[#740001]" : "text-[#2c1e16]"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </div>

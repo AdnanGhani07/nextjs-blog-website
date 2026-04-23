@@ -70,7 +70,7 @@ export default function DashPosts() {
           userId: user?.publicMetadata?.userMongoId,
         }),
       });
-      const data = await res.json();
+      
       if (res.ok) {
         const newPosts = userPosts.filter(
           (post) => post._id !== postIdToDelete
@@ -78,6 +78,7 @@ export default function DashPosts() {
         setUserPosts(newPosts);
         setPostIdToDelete('');
       } else {
+        const data = await res.json();
         console.log(data.message);
       }
     } catch (error: any) {

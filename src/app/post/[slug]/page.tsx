@@ -1,11 +1,12 @@
-import CallToAction from '@/components/CallToAction';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import RecentPosts from '@/components/RecentPosts';
-import Post from '@/lib/models/post.model';
-import { connect } from '@/lib/mongodb/mongoose';
-import { Separator } from '@/components/ui/separator';
-import Image from 'next/image';
+import CallToAction from "@/components/CallToAction";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import RecentPosts from "@/components/RecentPosts";
+import Post from "@/lib/models/post.model";
+import { connect } from "@/lib/mongodb/mongoose";
+import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+import { GiQuillInk, GiScrollUnfurled, GiInkSwirl } from "react-icons/gi";
 
 export default async function PostPage(props: {
   params: Promise<{ slug: string }>;
@@ -17,74 +18,106 @@ export default async function PostPage(props: {
     await connect();
     post = await Post.findOne({ slug });
   } catch (error) {
-    console.log('Error fetching post:', error);
-    post = { title: 'Failed to load post' };
+    console.log("Error fetching post:", error);
+    post = { title: "Failed to load post" };
   }
-  
-  if (!post || post.title === 'Failed to load post') {
+
+  if (!post || post.title === "Failed to load post") {
     return (
-      <main className='p-6 flex flex-col max-w-4xl mx-auto min-h-screen text-center'>
-        <h2 className='text-3xl mt-20 font-serif font-bold'>
-          Post not found
+      <main className="p-6 flex flex-col max-w-4xl mx-auto min-h-screen text-center py-32">
+        <GiInkSwirl className="h-16 w-16 text-[#d3a625]/20 mx-auto mb-6" />
+        <h2 className="font-cinzel text-4xl font-bold text-[#1a0f0a]">
+          Scroll Not Found
         </h2>
-        <Link href="/" className="mt-6">
-          <Button variant="outline">Return Home</Button>
+        <p className="font-serif italic text-lg text-[#1a0f0a]/60 mt-4">
+          The archives are silent on this matter.
+        </p>
+        <Link href="/" className="mt-10">
+          <Button
+            variant="outline"
+            className="font-cinzel font-bold tracking-widest border-4 border-double border-[#740001] text-[#740001]"
+          >
+            Return to Ledger
+          </Button>
         </Link>
       </main>
     );
   }
-  
+
   return (
-    <main className='p-6 flex flex-col max-w-4xl mx-auto min-h-screen'>
-      <div className="space-y-6 text-center">
-        <h1 className='text-4xl md:text-5xl lg:text-6xl mt-10 font-serif font-bold leading-tight'>
+    <main className="flex flex-col max-w-5xl mx-auto min-h-screen py-20 px-6 relative">
+      {/* Ornate Background Elements */}
+      <div className="absolute top-0 left-0 w-32 h-32 border-t-8 border-l-8 border-[#d3a625]/20 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-32 h-32 border-t-8 border-r-8 border-[#d3a625]/20 pointer-events-none" />
+
+      <div className="space-y-8 text-center relative z-10">
+        <div className="flex justify-center items-center gap-4 mb-4">
+          <div className="h-px w-20 bg-[#d3a625]/40" />
+          <Link
+            href={`/search?category=${post.category}`}
+            className="font-cinzel text-sm font-black tracking-[0.3em] text-[#740001] uppercase hover:underline"
+          >
+            {post.category}
+          </Link>
+          <div className="h-px w-20 bg-[#d3a625]/40" />
+        </div>
+
+        <h1 className="font-cinzel text-5xl md:text-7xl font-black leading-none text-[#1a0f0a] tracking-tighter">
           {post.title}
         </h1>
-        
-        <Link
-          href={`/search?category=${post.category}`}
-          className='inline-block'
-        >
-          <Button variant="secondary" size="sm" className="rounded-full px-4">
-            {post.category}
-          </Button>
-        </Link>
+
+        <div className="flex flex-col items-center gap-4 pt-4">
+          <GiQuillInk className="h-10 w-10 text-[#740001]" />
+          <div className="flex items-center gap-6 font-serif italic text-lg text-[#1a0f0a] font-bold">
+            <span>
+              Scribed on{" "}
+              {new Date(post.createdAt).toLocaleDateString(undefined, {
+                dateStyle: "long",
+              })}
+            </span>
+            <span className="h-1 w-1 bg-[#d3a625] rounded-full" />
+            <span>{Math.ceil(post?.content?.length / 1000)} min reading</span>
+          </div>
+        </div>
       </div>
 
-      <div className="relative mt-12 rounded-2xl overflow-hidden shadow-2xl border aspect-video">
+      <div className="relative mt-16 group overflow-hidden border-[16px] border-double border-[#d3a625]/30 shadow-2xl aspect-[21/9]">
         <Image
           src={post.image}
           alt={post.title}
           fill
           priority
-          className='object-cover transition-transform duration-700 hover:scale-105'
+          className="object-cover grayscale-[0.1] sepia-[0.2] transition-transform duration-1000 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-[#2c1e16]/10 mix-blend-multiply" />
       </div>
 
-      <div className='flex justify-between items-center py-6 mt-8 border-t border-b text-sm text-muted-foreground'>
-        <div className="flex items-center gap-2">
-          <span className="font-medium text-primary">Published</span>
-          <span>{new Date(post.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
+      <article className="py-20 font-serif text-xl md:text-2xl leading-[1.8] text-[#1a0f0a] font-medium max-w-3xl mx-auto post-content">
+        <div
+          className="first-letter:text-7xl first-letter:font-cinzel first-letter:text-[#740001] first-letter:float-left first-letter:mr-3 first-letter:mt-2"
+          dangerouslySetInnerHTML={{ __html: post?.content }}
+        />
+      </article>
+
+      <div className="flex justify-center py-12">
+        <GiScrollUnfurled className="h-12 w-12 text-[#d3a625]/40" />
+      </div>
+
+      <div className="w-full py-20 bg-[#2c1e16]/5 border-y-8 border-double border-[#d3a625]/20">
+        <div className="max-w-4xl mx-auto px-6">
+          <CallToAction />
         </div>
-        <div className="flex items-center gap-2 italic">
-          <span>{Math.ceil(post?.content?.length / 1000)} min read</span>
+      </div>
+
+      <div className="py-32 w-full">
+        <div className="flex flex-col items-center gap-4 text-center mb-16">
+          <h2 className="font-cinzel text-4xl font-bold tracking-tighter text-[#1a0f0a]">
+            Related Scrolls
+          </h2>
+          <div className="h-1 w-20 bg-[#740001]" />
         </div>
+        <RecentPosts limit={3} />
       </div>
-
-      <article 
-        className='py-12 prose prose-lg dark:prose-invert max-w-none post-content leading-relaxed'
-        dangerouslySetInnerHTML={{ __html: post?.content }}
-      />
-
-      <Separator className="my-12" />
-
-      <div className='w-full'>
-        <CallToAction />
-      </div>
-
-      <Separator className="my-12" />
-      
-      <RecentPosts limit={3} />
     </main>
   );
 }

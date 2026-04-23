@@ -1,62 +1,82 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { GiQuillInk, GiCandleFlame, GiSpectacles } from "react-icons/gi";
 
 export default function About() {
   return (
-    <div className='min-h-screen bg-muted/30 flex items-center justify-center p-6'>
-      <Card className='max-w-3xl mx-auto shadow-xl border-t-4 border-t-primary'>
-        <CardContent className='p-8 md:p-12'>
-          <div className='space-y-8'>
-            <div className="space-y-2 text-center">
-              <h1 className='text-4xl md:text-5xl font-serif font-bold tracking-tight'>
-                About Woven Words
+    <div className='min-h-screen flex items-center justify-center p-6 py-20'>
+      <div className="absolute inset-0 bg-[#2c1e16]/5 pointer-events-none" />
+      
+      <Card className='max-w-4xl mx-auto shadow-[0_0_50px_rgba(0,0,0,0.15)] border-0 bg-transparent relative overflow-hidden'>
+        {/* Ornate Frame */}
+        <div className="absolute inset-0 border-[30px] border-double border-[#d3a625]/10 pointer-events-none z-10" />
+        
+        <CardContent className='p-12 md:p-20 relative z-20'>
+          <div className='space-y-12'>
+            <div className="space-y-4 text-center">
+              <div className="flex justify-center gap-6 mb-4">
+                <GiSpectacles className="h-10 w-10 text-[#d3a625]/40" />
+                <GiQuillInk className="h-10 w-10 text-[#740001]" />
+                <GiCandleFlame className="h-10 w-10 text-[#d3a625]/40" />
+              </div>
+              <h1 className='font-cinzel text-4xl md:text-6xl font-bold tracking-tighter text-[#2c1e16]'>
+                The Chronicler&apos;s <br />
+                <span className="text-[#740001] italic underline decoration-[#d3a625]/40 underline-offset-8">Manifesto</span>
               </h1>
-              <div className="h-1 w-20 bg-primary mx-auto rounded-full"></div>
+              <div className="h-0.5 w-40 bg-gradient-to-r from-transparent via-[#d3a625] to-transparent mx-auto mt-6"></div>
             </div>
 
-            <div className='text-lg text-muted-foreground flex flex-col gap-6 leading-relaxed'>
-              <p>
-                Welcome to <strong className="text-primary font-bold">Woven Words</strong> — a quiet corner of the internet
-                where words meet emotion. This space is dedicated to sharing poems, prose,
-                reflections, and fragments of thought, curated and penned with love.
+            <div className='font-serif text-xl text-[#2c1e16]/80 flex flex-col gap-8 leading-relaxed italic'>
+              <p className="first-letter:text-6xl first-letter:font-cinzel first-letter:text-[#740001] first-letter:float-left first-letter:mr-3 first-letter:mt-1">
+                Welcome to <strong className="text-[#740001] font-bold">Woven Words</strong> — a quiet corner of the digital aether
+                where ink meet emotion. This space is dedicated to the preservation of poems, prose,
+                reflections, and the delicate fragments of thought that drift through the scribe&apos;s mind.
               </p>
   
               <p>
-                Whether you&apos;re a lover of metaphors or someone seeking solace in verses,
-                this blog offers a blend of personal musings and literary inspirations.
-                Here, every post is a window into a moment, a feeling, or a memory.
+                Whether you be a seeker of metaphors or a weary soul finding solace in rhythm,
+                this archive offers a blend of personal musings and literary inspirations.
+                Here, every entry is a window into a moment, a feeling, or a ghost of a memory.
               </p>
   
-              <p>
-                Built using the latest web technologies like{" "}
-                <a
-                  href='https://nextjs.org'
-                  target='_blank'
-                  rel="noopener noreferrer"
-                  className='text-primary font-semibold hover:underline decoration-primary/30 underline-offset-4'
-                >
-                  Next.js
-                </a>{" "}
-                and secured with{" "}
-                <a
-                  href='https://clerk.dev'
-                  target='_blank'
-                  rel="noopener noreferrer"
-                  className='text-primary font-semibold hover:underline decoration-primary/30 underline-offset-4'
-                >
-                  Clerk
-                </a>
-                , Woven Words is a modern home for timeless expression.
-              </p>
+              <div className="bg-[#2c1e16]/5 p-8 rounded-sm border-l-4 border-[#740001] relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <GiQuillInk className="h-20 w-20" />
+                </div>
+                <p className="text-lg relative z-10">
+                  Forged using the modern sorcery of{" "}
+                  <a
+                    href='https://nextjs.org'
+                    target='_blank'
+                    rel="noopener noreferrer"
+                    className='text-[#740001] font-bold hover:underline decoration-[#d3a625]/30 underline-offset-4'
+                  >
+                    Next.js
+                  </a>{" "}
+                  and secured by the guardians of{" "}
+                  <a
+                    href='https://clerk.dev'
+                    target='_blank'
+                    rel="noopener noreferrer"
+                    className='text-[#740001] font-bold hover:underline decoration-[#d3a625]/30 underline-offset-4'
+                  >
+                    Clerk
+                  </a>
+                  , Woven Words is a timeless sanctuary for expression in a flickering world.
+                </p>
+              </div>
   
               <p>
-                Readers are encouraged to explore the archive, discover new perspectives, 
-                and immerse themselves in the rhythm of storytelling. This isn&apos;t just a blog — it&apos;s an evolving
-                collection of words that hopes to resonate with your inner world.
+                We encourage you to unroll the archives, discover new perspectives, 
+                and lose yourself in the cadence of storytelling. This is not merely a blog — it is an evolving
+                collection of words that hopes to resonate with the echoes of your own inner world.
               </p>
             </div>
 
-            <div className="pt-8 border-t text-center italic text-sm text-muted-foreground">
-              &quot;Words are, in my not-so-humble opinion, our most inexhaustible source of magic.&quot;
+            <div className="pt-12 border-t border-[#d3a625]/20 text-center">
+               <p className="font-cinzel text-sm tracking-[0.3em] text-[#d3a625] mb-4 uppercase">Signed & Sealed</p>
+               <div className="font-serif italic text-[#2c1e16]/60 text-lg">
+                 &quot;Words are, in my not-so-humble opinion, our most inexhaustible source of magic.&quot;
+               </div>
             </div>
           </div>
         </CardContent>

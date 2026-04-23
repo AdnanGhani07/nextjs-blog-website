@@ -3,8 +3,8 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-export default function ThemeCom({ children }) {
-  const { theme, setTheme } = useTheme();
+export default function ThemeCom({ children }: { children: React.ReactNode }) {
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -12,12 +12,12 @@ export default function ThemeCom({ children }) {
   }, []);
 
   if (!mounted) {
-    return null;
+    return <div className="min-h-screen bg-[#f4e4bc]" />;
   }
 
   return (
     <div className={theme}>
-      <div className="bg-white text-gray-700 dark:text-gray-200 dark:bg-[rgb(16,23,42)] min-h-screen">
+      <div className="bg-[#f4e4bc] text-[#2c1e16] min-h-screen selection:bg-[#740001]/20">
         {children}
       </div>
     </div>

@@ -6,14 +6,23 @@ import { NextRequest, NextResponse } from 'next/server';
 export const DELETE = async (req: NextRequest) => {
   const user = await currentUser();
   try {
-    await connect();
     const data = await req.json();
     
-    if (!user || !user.publicMetadata.isAdmin || user.publicMetadata.userMongoId !== data.userId) {
+    if (
+      !user || 
+      user.publicMetadata.isAdmin !== true || 
+      user.publicMetadata.userMongoId !== data.userId
+    ) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
     
-    await Post.findByIdAndDelete(data.postId);
+    await connect();
+
+    const deletedPost = await Post.findByIdAndDelete(data.postId);
+    if (!deletedPost) {
+      return new NextResponse('Post not found', { status: 404 });
+    }
+
     return new NextResponse('Post deleted', { status: 200 });
   } catch (error) {
     console.log('Error deleting post:', error);

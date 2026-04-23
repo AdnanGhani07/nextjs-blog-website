@@ -46,19 +46,25 @@ export async function POST(req: NextRequest) {
 
   const { id } = evt?.data;
   const eventType = evt?.type;
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
+  console.log(`Webhook received: Type=${eventType}`);
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
-    const emailList = evt?.data?.email_addresses?.map((e: any) => e.email_address);
+    const emailList = evt?.data?.email_addresses?.map((e: any) => e.email_address) || [];
     const { id, first_name, last_name, image_url, username } = evt?.data;
+    
+    // Ensure required fields have safe fallbacks for MongoDB schema
+    const safeFirstName = first_name ?? '';
+    const safeLastName = last_name ?? '';
+    const safeUsername = username ?? (emailList[0]?.split('@')[0] || `user_${id?.slice(-6)}`);
+
     try {
       const user = await createOrUpdateUser(
         id,
-        first_name,
-        last_name,
+        safeFirstName,
+        safeLastName,
         image_url,
         emailList,
-        username
+        safeUsername
       );
       if (user && eventType === 'user.created') {
         try {

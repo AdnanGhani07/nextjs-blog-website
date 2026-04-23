@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (req: NextRequest) => {
   try {
-    await connect();
     const user = await currentUser();
 
     if (!user) {
@@ -29,6 +28,12 @@ export const POST = async (req: NextRequest) => {
       .toLowerCase()
       .replace(/[^a-zA-Z0-9-]/g, '');
 
+    if (!slug) {
+      return NextResponse.json({ message: 'Title must contain letters or numbers to generate a valid slug.' }, { status: 400 });
+    }
+
+    await connect();
+
     const newPost = await Post.create({
       userId: user.publicMetadata.userMongoId,
       content,
@@ -42,6 +47,13 @@ export const POST = async (req: NextRequest) => {
 
   } catch (error: any) {
     console.error('Error creating post:', error);
+
+    if (error?.code === 11000) {
+      return NextResponse.json(
+        { message: 'A post with this title or slug already exists.' },
+        { status: 409 }
+      );
+    }
 
     return NextResponse.json(
       { message: 'Error creating post', error: error.message },

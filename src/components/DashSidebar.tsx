@@ -22,9 +22,7 @@ export default function DashSidebar() {
   useEffect(() => {
     const urlParams = new URLSearchParams(searchParams.toString());
     const tabFromUrl = urlParams.get('tab');
-    if (tabFromUrl) {
-      setTab(tabFromUrl);
-    }
+    setTab(tabFromUrl ?? '');
   }, [searchParams]);
 
   if (!isSignedIn) {

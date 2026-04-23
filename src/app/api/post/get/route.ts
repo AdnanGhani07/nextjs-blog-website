@@ -3,9 +3,9 @@ import { connect } from '@/lib/mongodb/mongoose';
 import { NextRequest } from 'next/server';
 
 export const POST = async (req: NextRequest) => {
-  await connect();
-  const data = await req.json();
   try {
+    await connect();
+    const data = await req.json();
     const startIndex = parseInt(data.startIndex) || 0;
     const limit = parseInt(data.limit) || 9;
     const sortDirection = data.order === 'asc' ? 1 : -1;

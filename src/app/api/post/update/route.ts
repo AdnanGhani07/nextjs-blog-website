@@ -6,7 +6,6 @@ import { NextRequest, NextResponse } from 'next/server';
 export const PUT = async (req: NextRequest) => {
   const user = await currentUser();
   try {
-    await connect();
     const data = await req.json();
 
     if (
@@ -18,6 +17,8 @@ export const PUT = async (req: NextRequest) => {
         status: 401,
       });
     }
+
+    await connect();
 
     const newPost = await Post.findByIdAndUpdate(
       data.postId,
@@ -31,6 +32,12 @@ export const PUT = async (req: NextRequest) => {
       },
       { new: true }
     );
+
+    if (!newPost) {
+      return new NextResponse('Post not found', {
+        status: 404,
+      });
+    }
 
     return new NextResponse(JSON.stringify(newPost), {
       status: 200,
