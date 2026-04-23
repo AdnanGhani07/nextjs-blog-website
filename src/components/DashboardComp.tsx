@@ -81,6 +81,16 @@ export default function DashboardComp() {
     }
   }, [user]);
 
+  if (!user?.publicMetadata?.isAdmin) {
+    return (
+      <div className='flex flex-col items-center justify-center h-full w-full py-12'>
+        <h1 className='text-2xl font-bold text-muted-foreground font-serif italic'>
+          The records of state are restricted to authorized scribes only.
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div className='p-6 md:mx-auto space-y-8'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6 justify-center max-w-5xl mx-auto'>

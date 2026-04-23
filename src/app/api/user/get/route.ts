@@ -4,15 +4,19 @@ import { currentUser } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (req: NextRequest) => {
-  const user = await currentUser();
-
   try {
-    await connect();
-    const data = await req.json();
+    const user = await currentUser();
 
-    if (!user || !user.publicMetadata.isAdmin) {
+    if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
+
+    if (user.publicMetadata.isAdmin !== true) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+
+    await connect();
+    const data = await req.json();
 
     const startIndex = parseInt(data.startIndex) || 0;
     const limit = parseInt(data.limit) || 9;

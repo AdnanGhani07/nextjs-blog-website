@@ -6,7 +6,7 @@ import { GiWaxSeal } from "react-icons/gi";
 
 export default function PostCard({ post }: { post: any }) {
   return (
-    <Card className="group relative w-full h-[460px] max-w-[380px] overflow-hidden rounded-sm border-0 bg-transparent shadow-none transition-all hover:-translate-y-2 flex flex-col">
+    <Card className="group relative w-full h-[460px] max-w-[380px] overflow-hidden rounded-sm border-0 bg-transparent shadow-none transition-all hover:-translate-y-2 focus-within:-translate-y-2 flex flex-col">
       {/* Vintage Frame */}
       <div className="absolute inset-0 border-[12px] border-double border-[#d3a625]/30 pointer-events-none z-10" />
 
@@ -46,7 +46,7 @@ export default function PostCard({ post }: { post: any }) {
 
         <Link 
           href={`/post/${post.slug}`} 
-          className="mt-3 flex items-center justify-center w-full font-cinzel font-black tracking-widest text-[#1a0f0a] border-2 border-double border-[#d3a625]/40 hover:border-[#740001] hover:text-[#740001] transition-all rounded-none bg-white/20 h-10 text-[10px]"
+          className="mt-3 flex items-center justify-center w-full font-cinzel font-black tracking-widest text-[#1a0f0a] border-2 border-double border-[#d3a625]/40 hover:border-[#740001] hover:text-[#740001] focus:border-[#740001] focus:text-[#740001] transition-all rounded-none bg-white/20 h-10 text-[10px] outline-none"
         >
           Open the Scroll
         </Link>

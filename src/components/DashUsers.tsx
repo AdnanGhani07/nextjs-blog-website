@@ -15,7 +15,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 export default function DashUsers() {
   const { user, isLoaded } = useUser();
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -25,24 +26,36 @@ export default function DashUsers() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            userMongoId: user?.publicMetadata?.userMongoId,
-          }),
+          body: JSON.stringify({}),
         });
-        const data = await res.json();
-        if (res.ok) {
-          setUsers(data.users);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || 'Failed to fetch users');
         }
+
+        const data = await res.json();
+        setUsers(data.users);
       } catch (error: any) {
-        console.log(error.message);
+        console.error('Error fetching users:', error.message);
+        setError(error.message);
+        setUsers([]);
       }
     };
     if (user?.publicMetadata?.isAdmin) {
       fetchUsers();
     }
-  }, [user?.publicMetadata?.isAdmin, user?.publicMetadata?.userMongoId]);
+  }, [user?.publicMetadata?.isAdmin]);
 
-  if (!user?.publicMetadata?.isAdmin && isLoaded) {
+  if (!isLoaded) {
+    return (
+      <div className='flex items-center justify-center min-h-[400px] w-full'>
+        <div className="animate-spin h-8 w-8 border-4 border-[#740001]/20 border-t-[#740001] rounded-full" />
+      </div>
+    );
+  }
+
+  if (!user?.publicMetadata?.isAdmin) {
     return (
       <div className='flex flex-col items-center justify-center h-full w-full py-12'>
         <h1 className='text-2xl font-bold text-muted-foreground'>You are not an admin!</h1>
@@ -50,9 +63,21 @@ export default function DashUsers() {
     );
   }
 
+  if (error) {
+    return (
+      <div className='text-center py-12'>
+        <p className='text-destructive text-lg font-bold'>Error: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className='w-full overflow-x-auto p-4 md:mx-auto'>
-      {users.length > 0 ? (
+      {users === null ? (
+        <div className='flex items-center justify-center py-12'>
+          <div className="animate-spin h-8 w-8 border-4 border-[#740001]/20 border-t-[#740001] rounded-full" />
+        </div>
+      ) : users.length > 0 ? (
         <div className='rounded-md border bg-card shadow-sm'>
           <Table>
             <TableHeader>

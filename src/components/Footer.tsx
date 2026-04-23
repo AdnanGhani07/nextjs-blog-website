@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { BsInstagram, BsTwitter, BsGithub } from 'react-icons/bs';
 import { GiQuillInk, GiScrollUnfurled } from 'react-icons/gi';
