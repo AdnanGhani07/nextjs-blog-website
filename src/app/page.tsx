@@ -62,7 +62,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="p-6 flex flex-col gap-16 py-32 w-full max-w-6xl">
+      <div className="p-6 flex flex-col gap-16 py-32 w-full max-w-7xl">
+
         <div className="flex flex-col items-center gap-4 text-center mb-8">
           <h2 className="font-cinzel text-5xl font-bold tracking-tighter text-[#2c1e16]">
             Recent Dispatches

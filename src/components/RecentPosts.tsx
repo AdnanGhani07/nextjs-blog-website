@@ -16,14 +16,15 @@ export default async function RecentPosts({ limit }: RecentPostsProps) {
     console.log("Error getting post:", error);
   }
   return (
-    <div className="flex flex-col justify-center items-center mb-5">
-      <div className="flex flex-wrap gap-5 mt-5 justify-center">
+    <div className="w-full mb-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
         {posts?.length ? (
           posts.map((post: any) => <PostCard key={post._id} post={post} />)
         ) : (
-          <p>No posts found</p>
+          <p className="col-span-full text-center font-serif italic text-lg">No scrolls found in the archives...</p>
         )}
       </div>
     </div>
   );
+
 }

@@ -67,16 +67,20 @@ export default async function PostPage(props: {
         </div>
       </div>
 
-      <div className="relative mt-16 group overflow-hidden border-[16px] border-double border-[#d3a625]/30 shadow-2xl aspect-[21/9]">
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          priority
-          className="object-cover grayscale-[0.1] sepia-[0.2] transition-transform duration-1000 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-[#2c1e16]/10 mix-blend-multiply" />
-      </div>
+      {post.image && (
+        <div className="relative mt-16 group overflow-hidden border-[16px] border-double border-[#d3a625]/30 shadow-2xl aspect-[21/9]">
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            priority
+            unoptimized
+            className="object-cover grayscale-[0.1] sepia-[0.2] transition-transform duration-1000 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-[#2c1e16]/10 mix-blend-multiply" />
+        </div>
+      )}
+
 
       <article className="py-20 font-serif text-xl md:text-2xl leading-[1.8] text-[#1a0f0a] font-medium max-w-3xl mx-auto post-content">
         <div
