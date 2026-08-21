@@ -5,13 +5,6 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import 'react-quill-new/dist/quill.snow.css';
 
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '../../../../firebase';
 import { useEffect, useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -28,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
-import { HiExclamationCircle } from "react-icons/hi";
+import { FiAlertCircle, FiUploadCloud, FiSave } from "react-icons/fi";
 import Image from 'next/image';
 
 export default function UpdatePost() {
@@ -79,33 +72,42 @@ export default function UpdatePost() {
         return;
       }
       setImageUploadError(null);
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + '-' + file.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setImageUploadProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setImageUploadError('Image upload failed');
-          setImageUploadProgress(null);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageUploadProgress(null);
-            setImageUploadError(null);
-            setFormData((prev: any) => ({ ...prev, image: downloadURL }));
-          });
+      setImageUploadProgress('10');
+
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      if (!cloudName || !uploadPreset) {
+        throw new Error('Cloudinary cloud name or upload preset is missing.');
+      }
+
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+      uploadData.append('upload_preset', uploadPreset);
+
+      setImageUploadProgress('50');
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: 'POST',
+          body: uploadData,
         }
       );
-    } catch (error) {
-      setImageUploadError('Image upload failed');
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        throw new Error(data.error?.message || 'Failed to upload image to Cloudinary');
+      }
+
       setImageUploadProgress(null);
-      console.log(error);
+      setImageUploadError(null);
+      setFormData((prev: any) => ({ ...prev, image: data.secure_url }));
+    } catch (error: any) {
+      setImageUploadError(error.message || 'Image upload failed');
+      setImageUploadProgress(null);
+      console.error('Cloudinary upload error:', error);
     }
   };
 
@@ -140,59 +142,72 @@ export default function UpdatePost() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg animate-pulse">Loading post data...</p>
+        <p className="font-serif italic text-lg text-muted-foreground animate-pulse">Loading piece data...</p>
       </div>
     );
   }
 
   if (isSignedIn && user.publicMetadata.isAdmin) {
     return (
-      <div className="p-6 max-w-4xl mx-auto min-h-screen space-y-8">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Update Post</h1>
-          <p className="text-muted-foreground">Modify your writing and keep it fresh.</p>
+      <div className="p-6 md:p-12 max-w-4xl mx-auto min-h-screen space-y-8">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-cinzel font-bold tracking-widest uppercase">
+            Edit Scroll
+          </div>
+          <h1 className="font-cinzel text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            Revise <span className="editorial-gradient-text font-serif italic">Manuscript</span>
+          </h1>
+          <p className="font-serif text-muted-foreground">Modify your writing and refine its brilliance.</p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6 bg-card/60 backdrop-blur-sm border border-border/70 rounded-3xl p-6 sm:p-10 shadow-sm" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="title">Post Title</Label>
+              <Label htmlFor="title" className="font-cinzel text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Title
+              </Label>
               <Input
                 id="title"
                 placeholder="Title"
                 required
                 value={formData.title || ''}
+                className="bg-background/80 border-border/70 rounded-xl font-serif text-base"
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
+              <Label htmlFor="category" className="font-cinzel text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Circle / Genre
+              </Label>
               <Select 
                 value={formData.category || 'uncategorized'}
                 onValueChange={(value) => setFormData({ ...formData, category: value })}
               >
-                <SelectTrigger id="category">
+                <SelectTrigger id="category" className="bg-background/80 border-border/70 rounded-xl">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="uncategorized">Uncategorized</SelectItem>
-                  <SelectItem value="poem">Poem</SelectItem>
+                  <SelectItem value="poem">Poem & Verse</SelectItem>
                   <SelectItem value="journal">Journal</SelectItem>
                   <SelectItem value="article">Article</SelectItem>
+                  <SelectItem value="ai">AI Reflection</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <Label>Featured Image</Label>
-            <div className="flex flex-col sm:flex-row gap-4 items-center p-6 border-2 border-dashed rounded-xl bg-muted/30 transition-colors hover:bg-muted/50">
+          <div className="space-y-3">
+            <Label className="font-cinzel text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Featured Image
+            </Label>
+            <div className="flex flex-col sm:flex-row gap-4 items-center p-6 border-2 border-dashed border-border/80 rounded-2xl bg-muted/20 transition-colors hover:bg-muted/30">
               <Input
                 type="file"
                 accept="image/*"
-                className="bg-transparent border-none cursor-pointer flex-1"
+                className="bg-transparent border-none cursor-pointer flex-1 text-sm font-serif"
                 onChange={(e) => {
                   const files = e.target.files;
                   if (files && files.length > 0) {
@@ -203,39 +218,42 @@ export default function UpdatePost() {
               <Button
                 type="button"
                 variant="outline"
-                size="lg"
+                size="sm"
                 onClick={handleUpdloadImage}
                 disabled={!!imageUploadProgress}
-                className="min-w-[140px]"
+                className="rounded-full px-6 gap-2 font-cinzel text-xs font-bold"
               >
                 {imageUploadProgress ? (
-                  <div className="w-10 h-10">
+                  <div className="w-6 h-6">
                     <CircularProgressbar
                       value={parseInt(imageUploadProgress)}
                       text={`${imageUploadProgress}%`}
                       styles={{
-                        text: { fontSize: '24px', fill: 'currentColor' },
+                        text: { fontSize: '28px', fill: 'currentColor' },
                         path: { stroke: 'currentColor' }
                       }}
                     />
                   </div>
                 ) : (
-                  "Update Image"
+                  <>
+                    <FiUploadCloud className="h-4 w-4" />
+                    Update Image
+                  </>
                 )}
               </Button>
             </div>
           </div>
 
           {imageUploadError && (
-            <Alert variant="destructive">
-              <HiExclamationCircle className="h-4 w-4" />
+            <Alert variant="destructive" className="rounded-2xl">
+              <FiAlertCircle className="h-4 w-4" />
               <AlertTitle>Upload Failed</AlertTitle>
               <AlertDescription>{imageUploadError}</AlertDescription>
             </Alert>
           )}
 
           {formData.image && (
-            <div className="relative group rounded-xl overflow-hidden border shadow-lg aspect-video w-full">
+            <div className="relative group rounded-2xl overflow-hidden border border-border/80 shadow-md aspect-[16/9] w-full">
               <Image
                 src={formData.image}
                 alt="upload"
@@ -246,13 +264,15 @@ export default function UpdatePost() {
           )}
 
           <div className="space-y-2">
-            <Label>Content</Label>
-            <div className="bg-background rounded-md border min-h-[400px]">
+            <Label className="font-cinzel text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Prose & Content
+            </Label>
+            <div className="bg-background rounded-2xl border border-border/70 overflow-hidden min-h-[400px]">
               <ReactQuill
                 theme="snow"
                 value={formData.content || ''}
-                placeholder="Unleash your creativity..."
-                className="h-[350px] mb-12"
+                placeholder="Unfurl your words..."
+                className="h-[340px] mb-12"
                 onChange={(value) => {
                   setFormData({ ...formData, content: value });
                 }}
@@ -264,14 +284,15 @@ export default function UpdatePost() {
             type="submit" 
             size="lg" 
             disabled={!!imageUploadProgress}
-            className="w-full font-bold text-lg h-12 bg-gradient-to-r from-teal-500 to-emerald-500 hover:opacity-90 transition-opacity"
+            className="w-full font-cinzel text-xs font-bold tracking-wider h-12 rounded-full bg-primary text-primary-foreground hover:opacity-90 shadow-md gap-2"
           >
-            Update Post
+            <FiSave className="h-4 w-4" />
+            Save Changes
           </Button>
 
           {publishError && (
-            <Alert variant="destructive">
-              <HiExclamationCircle className="h-4 w-4" />
+            <Alert variant="destructive" className="rounded-2xl">
+              <FiAlertCircle className="h-4 w-4" />
               <AlertTitle>Update Error</AlertTitle>
               <AlertDescription>{publishError}</AlertDescription>
             </Alert>
@@ -283,9 +304,9 @@ export default function UpdatePost() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-      <h1 className="text-4xl font-bold text-destructive">Access Denied</h1>
-      <p className="text-muted-foreground">You need to be an admin to update a post.</p>
-      <Button onClick={() => router.push('/')}>Return Home</Button>
+      <h1 className="font-cinzel text-3xl font-bold text-destructive">Access Restricted</h1>
+      <p className="font-serif text-muted-foreground">You need to be an admin to update a post.</p>
+      <Button onClick={() => router.push('/')} className="rounded-full">Return Home</Button>
     </div>
   );
 }

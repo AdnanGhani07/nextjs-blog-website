@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { AiOutlineSearch } from "react-icons/ai";
-import { GiQuillInk, GiScrollUnfurled } from "react-icons/gi";
+import { dark } from "@clerk/themes";
+import { useTheme } from "next-themes";
+import { FiSun, FiMoon, FiSearch, FiMenu, FiEdit3 } from "react-icons/fi";
+import { GiQuillInk } from "react-icons/gi";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +23,16 @@ export default function Header() {
   const path = usePathname();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDarkMode = mounted && (theme === "dark" || resolvedTheme === "dark");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,61 +52,115 @@ export default function Header() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Collections", href: "/collections" },
-    { name: "Write Post", href: "/dashboard/create-post" },
+    { name: "Write", href: "/dashboard/create-post" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#f4e4bc] border-b-4 border-double border-[#d3a625] shadow-xl">
-      <div className="container flex h-20 items-center justify-between mx-auto px-6">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md transition-colors duration-300">
+      <div className="container mx-auto flex h-20 items-center justify-between px-6">
+        {/* Brand Logo */}
         <Link
           href="/"
-          className="flex items-center gap-3 group transition-transform hover:scale-105"
+          className="flex items-center gap-3 group transition-transform hover:opacity-90"
         >
-          <div className="relative">
-            <GiQuillInk className="h-10 w-10 text-[#740001] transition-transform group-hover:-rotate-12" />
-            <div className="absolute -top-1 -right-1 h-3 w-3 bg-[#d3a625] rounded-full shadow-[0_0_8px_#d3a625]" />
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary border border-primary/20 transition-all group-hover:scale-105 group-hover:border-primary/40 group-hover:bg-primary/15 shadow-sm">
+            <GiQuillInk className="h-6 w-6 transition-transform group-hover:-rotate-12" />
           </div>
-          <span className="font-cinzel text-2xl font-black tracking-widest text-[#2c1e16]">
-            Woven Words
-          </span>
+          <div className="flex flex-col">
+            <span className="font-cinzel text-xl md:text-2xl font-bold tracking-tight text-foreground">
+              Woven{" "}
+              <span className="text-primary font-serif italic">Words</span>
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`font-cinzel text-sm font-black tracking-wider transition-all hover:text-[#740001] hover:underline decoration-2 underline-offset-8 ${
-                path === link.href ? "text-[#740001] underline decoration-[#740001]" : "text-[#2c1e16]"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+        <nav className="hidden lg:flex items-center gap-1 bg-muted/40 p-1.5 rounded-full border border-border/40 backdrop-blur-sm">
+          {navLinks.map((link) => {
+            const isActive = path === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`font-cinzel text-xs font-semibold tracking-wider px-5 py-2 rounded-full transition-all duration-200 ${
+                  isActive
+                    ? "bg-background text-primary shadow-sm font-bold border border-border/50"
+                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-6">
-          {/* Search Bar */}
-          <form onSubmit={handleSubmit} className="hidden xl:flex relative group">
-            <AiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2c1e16] group-focus-within:text-[#740001]" />
+        {/* Right Actions: Search + Theme Toggle + Auth */}
+        <div className="flex items-center gap-4">
+          {/* Quick Search */}
+          <form
+            onSubmit={handleSubmit}
+            className="hidden xl:flex relative group"
+          >
+            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
               type="search"
-              placeholder="Search archives..."
-              className="pl-10 w-[250px] bg-white/30 border-b-2 border-t-0 border-x-0 border-[#d3a625] rounded-none focus-visible:ring-0 focus-visible:border-[#740001] transition-all italic placeholder:text-[#2c1e16]/60 font-serif text-[#2c1e16] font-bold"
+              placeholder="Search scrolls & essays..."
+              className="pl-10 w-[220px] lg:w-[260px] bg-muted/40 border-border/60 rounded-full focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all text-xs font-serif placeholder:text-muted-foreground/60 h-9"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </form>
 
-          <div className="flex items-center gap-4">
+          {/* Theme Toggle Button */}
+          {mounted && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(isDarkMode ? "light" : "dark")}
+              className="w-9 h-9 rounded-full border border-border/60 bg-muted/30 hover:bg-muted text-foreground transition-all duration-300"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? (
+                <FiSun className="h-4 w-4 text-secondary animate-in zoom-in-50 duration-300" />
+              ) : (
+                <FiMoon className="h-4 w-4 text-primary animate-in zoom-in-50 duration-300" />
+              )}
+            </Button>
+          )}
+
+          {/* Authentication */}
+          <div className="flex items-center gap-3">
             <SignedIn>
-              <div className="border-4 border-double border-[#d3a625] rounded-full p-0.5 shadow-md">
+              <div className="p-0.5 rounded-full border border-border/80 shadow-sm">
                 <UserButton
                   appearance={{
+                    baseTheme: isDarkMode ? dark : undefined,
+                    variables: {
+                      colorPrimary: "#9f1239",
+                      borderRadius: "0.75rem",
+                    },
                     elements: {
-                      userButtonAvatarBox: "h-9 w-9",
-                    }
+                      userButtonAvatarBox: "h-8 w-8",
+                      userButtonPopoverFooter: "hidden",
+                      userButtonPopoverCard: isDarkMode
+                        ? "!bg-[#141417] !text-[#f4f4f5] border border-white/10 shadow-2xl overflow-hidden"
+                        : "!bg-white !text-[#18181b] border border-black/10 shadow-2xl overflow-hidden",
+                      userButtonPopoverActionButton: isDarkMode
+                        ? "!text-[#f4f4f5] hover:!bg-[#202026]"
+                        : "!text-[#18181b] hover:!bg-black/5",
+                      userButtonPopoverActionButtonText: isDarkMode
+                        ? "!text-[#f4f4f5]"
+                        : "!text-[#18181b]",
+                      userButtonPopoverActionButtonIcon: isDarkMode
+                        ? "!text-[#f4f4f5]"
+                        : "!text-[#18181b]",
+                      userPreviewMainIdentifier: isDarkMode
+                        ? "!text-[#f4f4f5] font-bold"
+                        : "!text-[#18181b] font-bold",
+                      userPreviewSecondaryIdentifier: isDarkMode
+                        ? "!text-[#a1a1aa]"
+                        : "!text-[#71717a]",
+                    },
                   }}
                   userProfileUrl="/dashboard?tab=profile"
                 />
@@ -104,7 +169,10 @@ export default function Header() {
 
             <SignedOut>
               <Link href="/sign-in">
-                <Button variant="outline" className="font-cinzel font-black tracking-widest border-4 border-double border-[#740001] text-[#740001] hover:bg-[#740001] hover:text-white transition-all bg-white/20">
+                <Button
+                  size="sm"
+                  className="font-cinzel text-xs font-bold tracking-wider rounded-full px-5 bg-primary text-primary-foreground hover:opacity-90 shadow-sm transition-all"
+                >
                   Sign In
                 </Button>
               </Link>
@@ -112,32 +180,59 @@ export default function Header() {
 
             {/* Mobile Menu */}
             <div className="lg:hidden">
-              <Sheet>
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger
                   render={
-                    <Button variant="ghost" size="icon" className="hover:bg-[#d3a625]/20 border-2 border-[#d3a625]/50">
-                      <GiScrollUnfurled className="h-8 w-8 text-[#2c1e16]" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="w-9 h-9 rounded-full border border-border/60 hover:bg-muted"
+                    >
+                      <FiMenu className="h-5 w-5 text-foreground" />
                     </Button>
                   }
                 />
-                <SheetContent side="right" className="bg-[#f4e4bc] border-l-8 border-double border-[#d3a625] font-serif">
+                <SheetContent
+                  side="right"
+                  className="bg-background/95 backdrop-blur-xl border-l border-border/60 font-serif w-[300px]"
+                >
                   <SheetHeader>
-                    <SheetTitle className="font-cinzel text-3xl font-black text-left border-b-4 border-double border-[#d3a625] pb-4 text-[#2c1e16]">
-                      Navigation
+                    <SheetTitle className="font-cinzel text-2xl font-bold text-left border-b border-border/50 pb-4 text-foreground">
+                      Woven <span className="text-primary italic">Words</span>
                     </SheetTitle>
                   </SheetHeader>
-                  <div className="flex flex-col gap-8 mt-10">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className={`font-cinzel text-2xl font-black transition-colors hover:text-[#740001] ${
-                          path === link.href ? "text-[#740001]" : "text-[#2c1e16]"
-                        }`}
-                      >
-                        {link.name}
-                      </Link>
-                    ))}
+
+                  <div className="flex flex-col gap-3 mt-8">
+                    {navLinks.map((link) => {
+                      const isActive = path === link.href;
+                      return (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`font-cinzel text-lg px-4 py-2.5 rounded-lg font-medium transition-all ${
+                            isActive
+                              ? "bg-primary/10 text-primary font-bold border-l-4 border-primary"
+                              : "text-foreground/80 hover:bg-muted hover:text-foreground"
+                          }`}
+                        >
+                          {link.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-8 pt-6 border-t border-border/50">
+                    <form onSubmit={handleSubmit} className="relative">
+                      <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="search"
+                        placeholder="Search..."
+                        className="pl-9 bg-muted/40 border-border/60 rounded-lg text-sm"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </form>
                   </div>
                 </SheetContent>
               </Sheet>

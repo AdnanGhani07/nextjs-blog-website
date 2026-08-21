@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import {
-  HiArrowNarrowUp,
-  HiDocumentText,
-  HiOutlineUserGroup,
-} from 'react-icons/hi';
+  FiTrendingUp,
+  FiFileText,
+  FiUsers,
+  FiArrowRight,
+} from 'react-icons/fi';
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -83,88 +84,90 @@ export default function DashboardComp() {
 
   if (!user?.publicMetadata?.isAdmin) {
     return (
-      <div className='flex flex-col items-center justify-center h-full w-full py-12'>
-        <h1 className='text-2xl font-bold text-muted-foreground font-serif italic'>
-          The records of state are restricted to authorized scribes only.
+      <div className="flex flex-col items-center justify-center h-full w-full py-16">
+        <h1 className="text-xl font-cinzel text-muted-foreground italic">
+          The records are restricted to authorized administrators only.
         </h1>
       </div>
     );
   }
 
   return (
-    <div className='p-6 md:mx-auto space-y-8'>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 justify-center max-w-5xl mx-auto'>
-        <Card className='shadow-sm border-2 transition-all hover:border-primary/20'>
-          <CardContent className='p-6'>
-            <div className='flex justify-between items-start'>
+    <div className="p-6 md:p-10 space-y-10 max-w-7xl mx-auto">
+      {/* Metrics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <Card className="rounded-3xl border border-border/70 bg-card/80 dark:bg-card/50 backdrop-blur-sm shadow-sm transition-all hover:border-primary/40">
+          <CardContent className="p-6 sm:p-8">
+            <div className="flex justify-between items-start">
               <div>
-                <p className='text-sm font-medium text-muted-foreground uppercase tracking-wider'>Total Users</p>
-                <h3 className='text-3xl font-bold mt-1'>{totalUsers}</h3>
+                <p className="text-xs font-cinzel font-bold uppercase tracking-wider text-muted-foreground">Total Writers & Users</p>
+                <h3 className="font-cinzel text-4xl font-bold text-foreground mt-2">{totalUsers}</h3>
               </div>
-              <div className='bg-indigo-500/10 p-3 rounded-full'>
-                <HiOutlineUserGroup className='text-indigo-600 h-8 w-8' />
+              <div className="bg-primary/10 text-primary p-3.5 rounded-2xl border border-primary/20">
+                <FiUsers className="h-6 w-6" />
               </div>
             </div>
-            <div className='flex items-center gap-2 mt-4 text-sm'>
-              <span className='text-green-600 font-semibold flex items-center bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full'>
-                <HiArrowNarrowUp className='mr-1' />
-                {lastMonthUsers}
+            <div className="flex items-center gap-2 mt-6 text-xs font-serif">
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center bg-emerald-500/10 px-2.5 py-0.5 rounded-full">
+                <FiTrendingUp className="mr-1 h-3.5 w-3.5" />
+                +{lastMonthUsers}
               </span>
-              <span className='text-muted-foreground'>Since last month</span>
+              <span className="text-muted-foreground">Joined in the last month</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className='shadow-sm border-2 transition-all hover:border-primary/20'>
-          <CardContent className='p-6'>
-            <div className='flex justify-between items-start'>
+        <Card className="rounded-3xl border border-border/70 bg-card/80 dark:bg-card/50 backdrop-blur-sm shadow-sm transition-all hover:border-primary/40">
+          <CardContent className="p-6 sm:p-8">
+            <div className="flex justify-between items-start">
               <div>
-                <p className='text-sm font-medium text-muted-foreground uppercase tracking-wider'>Total Posts</p>
-                <h3 className='text-3xl font-bold mt-1'>{totalPosts}</h3>
+                <p className="text-xs font-cinzel font-bold uppercase tracking-wider text-muted-foreground">Total Published Works</p>
+                <h3 className="font-cinzel text-4xl font-bold text-foreground mt-2">{totalPosts}</h3>
               </div>
-              <div className='bg-emerald-500/10 p-3 rounded-full'>
-                <HiDocumentText className='text-emerald-600 h-8 w-8' />
+              <div className="bg-secondary/10 text-secondary p-3.5 rounded-2xl border border-secondary/20">
+                <FiFileText className="h-6 w-6" />
               </div>
             </div>
-            <div className='flex items-center gap-2 mt-4 text-sm'>
-              <span className='text-green-600 font-semibold flex items-center bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full'>
-                <HiArrowNarrowUp className='mr-1' />
-                {lastMonthPosts}
+            <div className="flex items-center gap-2 mt-6 text-xs font-serif">
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center bg-emerald-500/10 px-2.5 py-0.5 rounded-full">
+                <FiTrendingUp className="mr-1 h-3.5 w-3.5" />
+                +{lastMonthPosts}
               </span>
-              <span className='text-muted-foreground'>Since last month</span>
+              <span className="text-muted-foreground">Authored in the last month</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto'>
-        <Card className='shadow-md overflow-hidden'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-4 border-b bg-muted/30'>
-            <CardTitle className='text-lg font-bold'>Recent Users</CardTitle>
-            <Link href={'/dashboard?tab=users'}>
-              <Button variant='outline' size='sm' className='font-semibold'>
-                See All
+      {/* Tables Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="rounded-3xl border border-border/70 bg-card/80 dark:bg-card/50 backdrop-blur-sm shadow-sm overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-6 border-b border-border/50 bg-muted/20">
+            <CardTitle className="font-cinzel text-base font-bold text-foreground">Recent Users</CardTitle>
+            <Link href="/dashboard?tab=users">
+              <Button variant="ghost" size="sm" className="font-cinzel text-xs font-bold text-primary gap-1">
+                View All <FiArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
           </CardHeader>
-          <CardContent className='p-0'>
+          <CardContent className="p-0">
             <Table>
-              <TableHeader className='bg-muted/20'>
+              <TableHeader className="bg-muted/10">
                 <TableRow>
-                  <TableHead className='w-[100px]'>Avatar</TableHead>
-                  <TableHead>Username</TableHead>
+                  <TableHead className="font-cinzel text-xs uppercase w-[80px]">Avatar</TableHead>
+                  <TableHead className="font-cinzel text-xs uppercase">Username</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users && users.map((u) => (
-                  <TableRow key={u._id} className='hover:bg-muted/50 transition-colors'>
+                  <TableRow key={u._id} className="hover:bg-muted/30 transition-colors">
                     <TableCell>
-                      <Avatar className='h-10 w-10 border'>
-                        <AvatarImage src={u.profilePicture} alt={u.username} className='object-cover' />
+                      <Avatar className="h-9 w-9 border border-border">
+                        <AvatarImage src={u.profilePicture} alt={u.username} className="object-cover" />
                         <AvatarFallback>{u.username?.charAt(0)}</AvatarFallback>
                       </Avatar>
                     </TableCell>
-                    <TableCell className='font-medium'>{u.username}</TableCell>
+                    <TableCell className="font-serif font-medium">{u.username}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -172,40 +175,40 @@ export default function DashboardComp() {
           </CardContent>
         </Card>
 
-        <Card className='shadow-md overflow-hidden'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-4 border-b bg-muted/30'>
-            <CardTitle className='text-lg font-bold'>Recent Posts</CardTitle>
-            <Link href={'/dashboard?tab=posts'}>
-              <Button variant='outline' size='sm' className='font-semibold'>
-                See All
+        <Card className="rounded-3xl border border-border/70 bg-card/80 dark:bg-card/50 backdrop-blur-sm shadow-sm overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-6 border-b border-border/50 bg-muted/20">
+            <CardTitle className="font-cinzel text-base font-bold text-foreground">Recent Pieces</CardTitle>
+            <Link href="/dashboard?tab=posts">
+              <Button variant="ghost" size="sm" className="font-cinzel text-xs font-bold text-primary gap-1">
+                View All <FiArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
           </CardHeader>
-          <CardContent className='p-0'>
+          <CardContent className="p-0">
             <Table>
-              <TableHeader className='bg-muted/20'>
+              <TableHeader className="bg-muted/10">
                 <TableRow>
-                  <TableHead>Image</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Category</TableHead>
+                  <TableHead className="font-cinzel text-xs uppercase">Preview</TableHead>
+                  <TableHead className="font-cinzel text-xs uppercase">Title</TableHead>
+                  <TableHead className="font-cinzel text-xs uppercase">Circle</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {posts && posts.map((post) => (
-                  <TableRow key={post._id} className='hover:bg-muted/50 transition-colors'>
+                  <TableRow key={post._id} className="hover:bg-muted/30 transition-colors">
                     <TableCell>
-                      <div className="relative w-14 h-10 overflow-hidden rounded-md border bg-muted">
+                      <div className="relative w-12 h-9 overflow-hidden rounded-lg border border-border bg-muted">
                         <Image
-                          src={post.image}
-                          alt='post'
+                          src={post.image || "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=300&q=80"}
+                          alt="post"
                           fill
-                          className='object-cover'
+                          className="object-cover"
                         />
                       </div>
                     </TableCell>
-                    <TableCell className='font-medium max-w-[200px] truncate'>{post.title}</TableCell>
+                    <TableCell className="font-serif font-medium max-w-[200px] truncate">{post.title}</TableCell>
                     <TableCell>
-                      <span className='inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold'>
+                      <span className="inline-flex items-center rounded-full bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 text-[11px] font-cinzel font-bold uppercase">
                         {post.category}
                       </span>
                     </TableCell>

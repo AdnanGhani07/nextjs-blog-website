@@ -1,21 +1,29 @@
 import mongoose from "mongoose";
 
-let initalized = false;
+let isConnected = false;
 
 export const connect = async () => {
     mongoose.set('strictQuery', true);
-    if (initalized) return;
+
+    if (mongoose.connection.readyState === 1 || isConnected) {
+        return;
+    }
+
+    if (!process.env.MONGO_URI) {
+        throw new Error("MONGO_URI is not defined in environment variables");
+    }
+
     try {
-        if (!process.env.MONGO_URI) {
-            throw new Error("MONGO_URI is not defined");
-        }
         console.log("Attempting to connect to MongoDB...");
         await mongoose.connect(process.env.MONGO_URI, {
             dbName: 'next-blog',
+            serverSelectionTimeoutMS: 5000,
         });
+        isConnected = true;
         console.log("Connected to MongoDB successfully");
-        initalized = true;
     } catch (error) {
-        console.log("MongoDB connection error", error);
+        isConnected = false;
+        console.error("MongoDB connection error:", error);
+        throw error;
     }
-}
+};

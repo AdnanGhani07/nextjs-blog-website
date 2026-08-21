@@ -22,6 +22,18 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'image.pollinations.ai',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.hostinger.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'hostinger.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
     ],
 
 

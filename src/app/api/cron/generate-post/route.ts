@@ -27,25 +27,32 @@ export const GET = async (req: NextRequest) => {
     // 2. Initialize Gemini
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.1-flash-lite-preview",
+      model: "gemini-3.6-flash",
     });
 
     // 3. Generate content
     const prompt = `
-      Create a blog post that is either a beautiful poem or an insightful article about life, art, philosophy, or nature.
-      The response MUST be in JSON format with two fields: 
-      1. "title": A catchy title.
-      2. "content": The blog post content in HTML format (using <p>, <h2>, <ul>, etc.).
-      Keep it high quality and engaging, and worthy to the eyes.
+      Create an evocative blog post for a literary publication called "Woven Words". It can be a beautiful poem, philosophical essay, or prose meditation about art, solitude, the cosmos, nature, or human connection.
+      The response MUST be in valid JSON format with two fields: 
+      1. "title": A poetic, captivating title.
+      2. "content": The blog post content in HTML format (using <p>, <h2>, <blockquote>, etc.).
+      Do not include any Markdown formatting or codeblocks around the JSON.
     `;
 
     const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    const responseText = result.response.text().trim();
+
+    // Clean any markdown code fences if present
+    const cleanedText = responseText
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/```$/i, "")
+      .trim();
 
     // Attempt to parse JSON from the response
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error("Failed to parse AI response as JSON");
+      throw new Error("Failed to parse AI response as JSON: " + responseText);
     }
 
     const { title, content } = JSON.parse(jsonMatch[0]);
@@ -64,12 +71,22 @@ export const GET = async (req: NextRequest) => {
       "-" +
       Math.random().toString(36).substring(2, 7);
 
+    // Curated aesthetic fallback imagery for AI dispatches
+    const aiFallbackImages = [
+      "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1499209974431-9dac3ada0047?auto=format&fit=crop&w=1200&q=80",
+    ];
+    const randomImage =
+      aiFallbackImages[Math.floor(Math.random() * aiFallbackImages.length)];
+
     // 5. Create the post
     const newPost = await Post.create({
       userId: adminUser._id.toString(),
       content,
       title,
-      image: "",
+      image: randomImage,
       category: "AI",
       slug,
     });

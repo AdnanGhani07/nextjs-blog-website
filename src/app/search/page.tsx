@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { GiScrollUnfurled, GiMagnifyingGlass } from 'react-icons/gi';
+import { FiSearch, FiFilter, FiBookOpen } from 'react-icons/fi';
 
 function SearchContent() {
   const [sidebarData, setSidebarData] = useState({
@@ -115,112 +115,129 @@ function SearchContent() {
   };
 
   return (
-    <div className='flex flex-col md:flex-row min-h-screen relative'>
-      <div className="absolute inset-0 bg-[#2c1e16]/5 pointer-events-none" />
-      
-      <aside className='w-full md:w-80 p-8 border-b-4 md:border-b-0 md:border-r-4 border-double border-[#d3a625]/30 relative z-10'>
-        <div className="mb-8 flex items-center gap-3 border-b-2 border-[#d3a625]/20 pb-4">
-           <GiMagnifyingGlass className="h-6 w-6 text-[#740001]" />
-           <h2 className="font-cinzel text-xl font-bold text-[#2c1e16]">Filter Archives</h2>
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Sidebar Filter */}
+      <aside className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-border/60 bg-card/30 backdrop-blur-sm">
+        <div className="mb-8 flex items-center gap-2.5 border-b border-border/50 pb-4">
+          <FiFilter className="h-5 w-5 text-primary" />
+          <h2 className="font-cinzel text-lg font-bold text-foreground">Filter Archives</h2>
         </div>
 
-        <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
-          <div className='space-y-3'>
-            <Label htmlFor='searchTerm' className='font-cinzel text-xs font-bold uppercase tracking-[0.2em] text-[#2c1e16]/60'>
-              Search Query
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <Label htmlFor="searchTerm" className="font-cinzel text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Keywords
             </Label>
-            <Input
-              placeholder='Keywords...'
-              id='searchTerm'
-              type='text'
-              value={sidebarData.searchTerm}
-              onChange={(e) => setSidebarData({ ...sidebarData, searchTerm: e.target.value })}
-              className='bg-white/50 border-b-2 border-t-0 border-x-0 border-[#d3a625]/30 rounded-none focus-visible:ring-0 focus-visible:border-[#740001] font-serif italic'
-            />
+            <div className="relative">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search titles & prose..."
+                id="searchTerm"
+                type="text"
+                value={sidebarData.searchTerm}
+                onChange={(e) => setSidebarData({ ...sidebarData, searchTerm: e.target.value })}
+                className="pl-9 bg-background/80 border-border/70 rounded-xl text-sm font-serif"
+              />
+            </div>
           </div>
 
-          <div className='space-y-3'>
-            <Label htmlFor='sort' className='font-cinzel text-xs font-bold uppercase tracking-[0.2em] text-[#2c1e16]/60'>
-              Chronology
+          <div className="space-y-2">
+            <Label htmlFor="sort" className="font-cinzel text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Order
             </Label>
             <Select 
               value={sidebarData.sort}
               onValueChange={(value) => setSidebarData({ ...sidebarData, sort: value })}
             >
-              <SelectTrigger id='sort' className='bg-white/50 border-b-2 border-t-0 border-x-0 border-[#d3a625]/30 rounded-none focus:ring-0'>
-                <SelectValue placeholder='Select order' />
+              <SelectTrigger id="sort" className="bg-background/80 border-border/70 rounded-xl">
+                <SelectValue placeholder="Select chronology" />
               </SelectTrigger>
-              <SelectContent className="bg-[#f4e4bc] border-[#d3a625]/30">
-                <SelectItem value='desc'>Newest Dispatches</SelectItem>
-                <SelectItem value='asc'>Ancient Scrolls</SelectItem>
+              <SelectContent>
+                <SelectItem value="desc">Latest Dispatches</SelectItem>
+                <SelectItem value="asc">Earliest Works</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className='space-y-3'>
-            <Label htmlFor='category' className='font-cinzel text-xs font-bold uppercase tracking-[0.2em] text-[#2c1e16]/60'>
-              Thematic Circle
+          <div className="space-y-2">
+            <Label htmlFor="category" className="font-cinzel text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Genre / Circle
             </Label>
             <Select 
               value={sidebarData.category}
               onValueChange={(value) => setSidebarData({ ...sidebarData, category: value })}
             >
-              <SelectTrigger id='category' className='bg-white/50 border-b-2 border-t-0 border-x-0 border-[#d3a625]/30 rounded-none focus:ring-0'>
-                <SelectValue placeholder='Select category' />
+              <SelectTrigger id="category" className="bg-background/80 border-border/70 rounded-xl">
+                <SelectValue placeholder="Select genre" />
               </SelectTrigger>
-              <SelectContent className="bg-[#f4e4bc] border-[#d3a625]/30">
-                <SelectItem value='all'>All Scrolls</SelectItem>
-                <SelectItem value='uncategorized'>Uncategorized</SelectItem>
-                <SelectItem value='poem'>Poetry & Verses</SelectItem>
-                <SelectItem value='journal'>Personal Journals</SelectItem>
-                <SelectItem value='article'>Library Articles</SelectItem>
+              <SelectContent>
+                <SelectItem value="all">All Genres</SelectItem>
+                <SelectItem value="uncategorized">Uncategorized</SelectItem>
+                <SelectItem value="poem">Poetry & Verse</SelectItem>
+                <SelectItem value="journal">Personal Journal</SelectItem>
+                <SelectItem value="article">Library Article</SelectItem>
+                <SelectItem value="ai">AI Reflection</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <Button type='submit' size='lg' className='w-full font-cinzel font-bold tracking-widest bg-[#740001] hover:bg-[#2c1e16] text-white shadow-lg transition-all rounded-none h-12'>
-            Examine the Tomes
+          <Button
+            type="submit"
+            className="w-full font-cinzel text-xs font-bold tracking-wider rounded-xl bg-primary text-primary-foreground hover:opacity-90 h-11 mt-2 shadow-sm"
+          >
+            Apply Filters
           </Button>
         </form>
       </aside>
 
-      <main className='flex-1 p-8 relative z-10'>
-        <div className="mb-12 border-b-2 border-[#d3a625]/20 pb-6 flex justify-between items-end">
-           <h1 className='font-cinzel text-4xl font-bold tracking-tighter text-[#2c1e16]'>
-             Recovered Scrolls
-           </h1>
-           <div className="text-[#2c1e16]/40 font-serif italic text-sm">
-             Showing results from the deep archives
-           </div>
+      {/* Main Results Grid */}
+      <main className="flex-1 p-6 md:p-10">
+        <div className="mb-10 border-b border-border/50 pb-4 flex justify-between items-end">
+          <div>
+            <h1 className="font-cinzel text-3xl font-bold tracking-tight text-foreground">
+              Archived Pieces
+            </h1>
+            <p className="text-muted-foreground font-serif text-sm mt-1">
+              Showing matching entries from the archives
+            </p>
+          </div>
         </div>
 
-        <div className='grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-10'>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center">
           {!loading && posts.length === 0 && (
-            <div className='col-span-full text-center py-32'>
-              <GiScrollUnfurled className="h-16 w-16 text-[#d3a625]/20 mx-auto mb-4" />
-              <p className='font-serif text-2xl italic text-[#2c1e16]/40'>Alas, no scrolls match your search criteria.</p>
+            <div className="col-span-full text-center py-24 flex flex-col items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-muted/60 flex items-center justify-center text-muted-foreground">
+                <FiBookOpen className="h-6 w-6" />
+              </div>
+              <p className="font-serif text-xl italic text-muted-foreground">
+                No matching scrolls found in the archives.
+              </p>
             </div>
           )}
+
           {loading && (
-             <div className='col-span-full text-center py-32'>
-               <div className="animate-spin h-12 w-12 border-4 border-[#740001]/20 border-t-[#740001] rounded-full mx-auto mb-4" />
-               <p className='font-serif text-2xl animate-pulse text-[#2c1e16]/40 italic'>Unrolling the heavy parchments...</p>
-             </div>
+            <div className="col-span-full text-center py-24 flex flex-col items-center gap-3">
+              <div className="animate-spin h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full" />
+              <p className="font-serif text-lg text-muted-foreground italic animate-pulse">
+                Retrieving scrolls...
+              </p>
+            </div>
           )}
+
           {!loading &&
             posts &&
-            posts.map((post) => <PostCard key={post._id} post={post} />)}
+            posts.map((post) => <PostCard key={post._id.toString()} post={post} />)}
         </div>
         
         {showMore && (
-          <div className='mt-20 text-center'>
+          <div className="mt-16 text-center">
             <Button
-              variant='ghost'
-              size='lg'
+              variant="outline"
+              size="lg"
               onClick={handleShowMore}
-              className='font-cinzel font-bold tracking-[0.3em] text-[#740001] hover:bg-[#740001]/5 border-2 border-transparent hover:border-[#740001]/20 px-12 h-14'
+              className="font-cinzel text-xs font-bold tracking-widest rounded-full px-10 h-12 border-border/80 hover:bg-muted"
             >
-              Discover More Fragments
+              Load More Pieces
             </Button>
           </div>
         )}
@@ -231,11 +248,13 @@ function SearchContent() {
 
 export default function Search() {
   return (
-    <Suspense fallback={
-      <div className='flex items-center justify-center min-h-screen'>
-        <div className="animate-spin h-12 w-12 border-4 border-[#740001]/20 border-t-[#740001] rounded-full" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full" />
+        </div>
+      }
+    >
       <SearchContent />
     </Suspense>
   );

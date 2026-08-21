@@ -4,106 +4,273 @@
 
 @layer base {
   :root {
-    --background: 38 66% 90%; /* Antique Parchment */
-    --foreground: 20 40% 10%; /* Much Darker Iron Gall Ink (Near Black) */
+    /* Light Mode: Warm Ivory & Deep Crimson Ink */
+    --background: 40 33% 98%;      /* #faf8f5 Warm Ivory */
+    --foreground: 240 10% 10%;     /* #18181b Deep Charcoal Ink */
     
-    --card: 38 66% 92%;
-    --card-foreground: 20 40% 10%;
+    --card: 0 0% 100%;             /* #ffffff Clean White */
+    --card-foreground: 240 10% 10%;
     
-    --popover: 38 66% 95%;
-    --popover-foreground: 20 40% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
     
-    --primary: 359 100% 20%; /* Even Deeper Crimson */
-    --primary-foreground: 38 66% 95%;
+    --primary: 346 84% 35%;        /* #a21caf Deep Rose / Wine Crimson */
+    --primary-foreground: 0 0% 100%;
     
-    --secondary: 45 80% 35%; /* Darker Gold for visibility */
-    --secondary-foreground: 20 40% 10%;
+    --secondary: 38 92% 48%;       /* #d97706 Warm Amber Gold */
+    --secondary-foreground: 240 10% 10%;
     
-    --muted: 38 30% 75%;
-    --muted-foreground: 20 30% 20%; /* Darker Muted Text */
+    --muted: 36 20% 93%;           /* Soft warm cream */
+    --muted-foreground: 240 5% 45%;/* Refined gray */
     
-    --accent: 38 50% 80%;
-    --accent-foreground: 359 100% 20%;
+    --accent: 38 92% 95%;          /* Light gold tint */
+    --accent-foreground: 346 84% 35%;
     
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 38 50% 60%; /* Darker Border */
-    --input: 38 50% 70%;
-    --ring: 359 100% 20%;
+    --border: 36 20% 88%;          /* Soft elegant border */
+    --input: 36 20% 88%;
+    --ring: 346 84% 35%;
     
-    --radius: 0.2rem;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 38 66% 90%;
-    --foreground: 20 40% 10%;
-    --primary: 359 100% 20%;
-    --secondary: 45 80% 35%;
-    --border: 38 50% 60%;
+    /* Dark Mode: Deep Obsidian & Radiant Amber */
+    --background: 240 10% 4%;      /* #0a0a0c Deep Obsidian */
+    --foreground: 240 5% 96%;      /* #f4f4f5 Soft Bright Text */
+    
+    --card: 240 8% 7%;             /* #121215 Dark Glass Surface */
+    --card-foreground: 240 5% 96%;
+    
+    --popover: 240 8% 8%;
+    --popover-foreground: 240 5% 96%;
+    
+    --primary: 346 87% 55%;        /* #f43f5e Luminous Crimson / Rose */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 38 92% 50%;       /* #f59e0b Glowing Amber */
+    --secondary-foreground: 240 10% 4%;
+    
+    --muted: 240 6% 14%;           /* #202026 Dark Slate */
+    --muted-foreground: 240 5% 65%;/* #a1a1aa Crisp Muted Text */
+    
+    --accent: 346 87% 16%;
+    --accent-foreground: 346 87% 65%;
+    
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 6% 16%;          /* #22222a Subtle border */
+    --input: 240 6% 16%;
+    --ring: 346 87% 55%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border selection:bg-primary/30;
+    @apply border-border selection:bg-primary/20 selection:text-primary;
   }
 
   body {
-    @apply bg-[#f4e4bc] text-[#1a0f0a] font-serif font-medium; /* Forced darker text and medium weight */
-
-    background-image: linear-gradient(rgba(244, 228, 188, 0.5), rgba(244, 228, 188, 0.5)), url('/parchment-bg.png');
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
+    @apply bg-background text-foreground antialiased transition-colors duration-300;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-cinzel tracking-wider uppercase font-black text-[#1a0f0a];
-
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.15);
+    @apply font-cinzel tracking-tight text-foreground;
   }
 }
 
-@layer components {
-  .vintage-border {
-    @apply border-4 border-double border-secondary rounded-sm shadow-[0_0_15px_rgba(0,0,0,0.15)];
-  }
-  
-  .ink-text {
-    @apply text-[#1a0f0a] font-bold leading-relaxed;
-
-    font-family: var(--font-playfair);
+@layer utilities {
+  .glass {
+    @apply bg-background/80 backdrop-blur-md border border-border/50;
   }
 
-  .scroll-shadow {
-    box-shadow: inset 0 0 50px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.15);
+  .glass-card {
+    @apply bg-card/80 dark:bg-card/60 backdrop-blur-md border border-border/60 shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-md;
+  }
+
+  .editorial-gradient-text {
+    @apply bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent;
+  }
+
+  .ambient-glow {
+    background: radial-gradient(circle at 50% 0%, rgba(217, 119, 6, 0.08) 0%, transparent 60%);
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f4e4bc;
-  border-left: 1px solid rgba(211, 166, 37, 0.4);
+  @apply bg-background;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #740001;
-  border: 3px solid #f4e4bc;
-  border-radius: 10px;
+  @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #1a0f0a;
+/* Article Styling */
+.post-content {
+  @apply text-foreground/90 leading-relaxed;
+}
+
+.post-content p {
+  @apply mb-6 font-serif text-lg md:text-xl leading-[1.85];
+}
+
+.post-content h2 {
+  @apply font-cinzel text-2xl md:text-3xl font-bold mt-12 mb-6 text-foreground tracking-tight;
+}
+
+.post-content h3 {
+  @apply font-cinzel text-xl md:text-2xl font-bold mt-8 mb-4 text-foreground;
+}
+
+.post-content ul, .post-content ol {
+  @apply my-6 pl-6 space-y-2 font-serif text-lg md:text-xl;
+}
+
+.post-content ul {
+  @apply list-disc;
+}
+
+.post-content ol {
+  @apply list-decimal;
+}
+
+.post-content blockquote {
+  @apply border-l-4 border-primary/60 pl-6 my-8 italic text-foreground/80 font-serif text-xl md:text-2xl;
 }
 
 .ql-editor {
-  @apply font-serif text-xl leading-loose font-medium text-[#1a0f0a];
-
+  @apply font-serif text-lg leading-relaxed text-foreground min-h-[300px];
   background: transparent !important;
+}
+
+/* Hide Clerk Dev Banner & Watermark Bottom Bar Everywhere */
+.cl-footerAction ~ div,
+.cl-footer__action ~ div,
+.cl-footerPages,
+.cl-internal-1dauvpw,
+.cl-userButtonPopoverFooter,
+.cl-userButtonPopoverFooterPages,
+.cl-userButtonPopoverCard__footer,
+[class*="userButtonPopoverFooter"],
+[class*="developmentMode"],
+[class*="securedBy"],
+[data-localization-key*="developmentMode"] {
+  display: none !important;
+}
+
+/* Ensure Clerk Popovers and UserProfile match dark mode */
+.dark .cl-userButtonPopoverCard,
+.dark .cl-userButtonPopoverRoot,
+.dark [class*="cl-userButtonPopoverCard"],
+.dark [class*="userButton-popover"],
+.dark [class*="userButtonPopoverCard"],
+.dark .cl-userProfile-root,
+.dark .cl-userProfile-root .cl-card,
+.dark .cl-userProfile-root .cl-navbar,
+.dark .cl-userProfile-root .cl-navbarContainer,
+.dark .cl-userProfile-root .cl-scrollBox,
+.dark .cl-pageScrollBox,
+.dark [class*="pageScrollBox"],
+.dark [class*="navbarContainer"],
+.dark .cl-card {
+  background-color: #141417 !important;
+  background: #141417 !important;
+  color: #f4f4f5 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .cl-navbar,
+.dark .cl-navbarContainer,
+.dark .cl-scrollBox,
+.dark [class*="cl-navbar"] {
+  background-color: #0e0e11 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .cl-navbarTitle,
+.dark [class*="navbarTitle"] {
+  color: #f4f4f5 !important;
+  font-family: var(--font-cinzel), serif !important;
+  font-weight: 700 !important;
+}
+
+.dark .cl-navbarSubtitle,
+.dark [class*="navbarSubtitle"] {
+  color: #a1a1aa !important;
+  font-family: var(--font-playfair), serif !important;
+}
+
+.dark .cl-navbarButton,
+.dark .cl-navbarButtonText,
+.dark .cl-navbarButtonIcon,
+.dark [class*="navbarButton"],
+.dark [class*="navbarButtonText"],
+.dark [class*="navbarButtonIcon"] {
+  color: #f4f4f5 !important;
+}
+
+.dark .cl-navbarButton[data-active="true"],
+.dark [class*="navbarButton"][data-active="true"] {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.dark .cl-navbarButton:hover,
+.dark [class*="navbarButton"]:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .cl-profileSection,
+.dark [class*="profileSection"] {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .cl-userButtonPopoverActionButton,
+.dark .cl-userButtonPopoverActionButtonText,
+.dark .cl-userButtonPopoverActionButtonIcon,
+.dark .cl-userPreviewMainIdentifier,
+.dark .cl-headerTitle,
+.dark .cl-formFieldLabel,
+.dark .cl-profileSectionTitleText,
+.dark .cl-profileSectionPrimaryDescription,
+.dark .cl-profileSectionContent,
+.dark .cl-profileSectionContent *,
+.dark .cl-profileSectionPrimaryButton,
+.dark [class*="profileSectionPrimaryButton"],
+.dark [class*="profileSectionPrimaryDescription"],
+.dark .cl-userProfile-root h1,
+.dark .cl-userProfile-root h2,
+.dark .cl-userProfile-root h3,
+.dark .cl-userProfile-root [class*="Title"],
+.dark .cl-userProfile-root [class*="title"] {
+  color: #f4f4f5 !important;
+}
+
+.dark .cl-userProfile-root [class*="navbarButtonText"],
+.dark .cl-userProfile-root [class*="navbarButton"] span,
+.dark .cl-userProfile-root [class*="navbarButton"] p,
+.dark .cl-userProfile-root [class*="navbarButton"] svg {
+  color: #f4f4f5 !important;
+  fill: #f4f4f5 !important;
+}
+
+.dark .cl-userPreviewSecondaryIdentifier,
+.dark .cl-headerSubtitle,
+.dark .cl-profileSectionTitle,
+.dark [class*="userPreviewSecondaryIdentifier"] {
+  color: #a1a1aa !important;
+}
+
+.dark .cl-userButtonPopoverActionButton:hover,
+.dark [class*="userButtonPopoverActionButton"]:hover {
+  background-color: #202026 !important;
 }
