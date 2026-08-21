@@ -1,29 +1,38 @@
-import Image from "next/image";
-
 export default function TermsPage() {
-    return (
-      <div className="max-w-4xl mx-auto py-16 px-4">
-        <h1 className="text-4xl font-bold mb-6 text-center my-7">Terms of Thought</h1>
-        <p className="text-gray-600 dark:text-gray-200 italic mb-6">
+  return (
+    <div className="max-w-3xl mx-auto py-16 px-6">
+      <header className="text-center space-y-4 mb-12">
+        <h1 className="font-cinzel text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+          Terms of <span className="editorial-gradient-text font-serif italic">Thought</span>
+        </h1>
+        <p className="font-serif italic text-muted-foreground text-lg">
           “Every poem, every phrase, every silence—is a piece of truth offered in trust.”
         </p>
-        <div className="text-gray-700 dark:text-gray-200 space-y-5 text-lg italic">
-          <p>
-            By spending time on this site, you agree to wander thoughtfully. The works shared—whether poems, prose, or reflections—are original unless otherwise noted.
-          </p>
-          <p>
-            You may quote or reference them, so long as credit is given, and the context remains respectful.
-          </p>
-          <ul className="list-disc list-inside pl-2 space-y-2">
-            <li>Do not republish the content without permission.</li>
-            <li>Do not use words here for profit without attribution.</li>
-            <li>Do engage with openness, kindness, and curiosity.</li>
+      </header>
+
+      <div className="font-serif text-lg text-foreground/80 space-y-6 leading-relaxed">
+        <p>
+          By spending time on Woven Words, you agree to wander thoughtfully. The works shared—whether poems, prose, or reflections—are original unless otherwise noted.
+        </p>
+        <p>
+          You are welcome to quote or reference pieces from this archive, provided proper attribution is given and the context remains respectful.
+        </p>
+
+        <div className="p-6 rounded-2xl bg-card/80 border border-border/60 space-y-2">
+          <h3 className="font-cinzel text-sm font-bold uppercase tracking-wider text-primary">
+            Guiding Principles
+          </h3>
+          <ul className="list-disc list-inside space-y-2 text-muted-foreground text-base">
+            <li>Do not republish full texts without permission.</li>
+            <li>Do not use writings here for commercial gain without explicit authorization.</li>
+            <li>Engage with openness, constructive feedback, and mutual respect.</li>
           </ul>
-          <p>
-            This is a space for sincere expression and thoughtful minds. Let’s keep it warm, welcoming, and wise.
-          </p>
         </div>
+
+        <p>
+          This is a sanctuary for sincere expression and thoughtful minds. Let us keep it warm, welcoming, and inspiring.
+        </p>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

@@ -8,12 +8,8 @@ export const DELETE = async (req: NextRequest) => {
   try {
     const data = await req.json();
     
-    if (
-      !user || 
-      user.publicMetadata.isAdmin !== true || 
-      user.publicMetadata.userMongoId !== data.userId
-    ) {
-      return new NextResponse('Unauthorized', { status: 401 });
+    if (!user || user.publicMetadata.isAdmin !== true) {
+      return NextResponse.json({ message: 'Unauthorized: Admin privileges required' }, { status: 401 });
     }
     
     await connect();

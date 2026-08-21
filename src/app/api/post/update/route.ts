@@ -8,12 +8,8 @@ export const PUT = async (req: NextRequest) => {
   try {
     const data = await req.json();
 
-    if (
-      !user ||
-      user.publicMetadata.userMongoId !== data.userMongoId ||
-      user.publicMetadata.isAdmin !== true
-    ) {
-      return NextResponse.json({ message: 'Unauthorized' }, {
+    if (!user || user.publicMetadata.isAdmin !== true) {
+      return NextResponse.json({ message: 'Unauthorized: Admin privileges required' }, {
         status: 401,
       });
     }

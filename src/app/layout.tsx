@@ -18,8 +18,9 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "Woven Words | Magical Archives",
-  description: "A Full-Stack Literary Blog in the Vintage Wizarding Tradition",
+  title: "Woven Words",
+  description:
+    "A Curated Anthology of Poetry, Thoughtful Prose, and Philosophical Reflections.",
 };
 
 export default function RootLayout({
@@ -31,21 +32,23 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${playfair.variable} ${cinzel.variable} antialiased min-h-screen font-serif text-foreground overflow-x-hidden`}
+          className={`${playfair.variable} ${cinzel.variable} antialiased min-h-screen bg-background text-foreground font-serif overflow-x-hidden`}
         >
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
-            forcedTheme="light"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange={false}
           >
-            <div className="relative flex min-h-screen flex-col">
+            <div className="relative flex min-h-screen flex-col bg-background text-foreground selection:bg-primary/20 selection:text-primary">
               <Suspense fallback={<div className="h-20 bg-transparent" />}>
                 <Header />
               </Suspense>
               <main className="flex-1 relative z-10">{children}</main>
               <FooterCom />
-              {/* Vintage Vignette Overlay */}
-              <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.15)_100%)] z-50"></div>
+
+              {/* Subtle Ambient Glow */}
+              <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-primary/5 via-secondary/5 to-transparent blur-3xl pointer-events-none -z-10" />
             </div>
           </ThemeProvider>
         </body>

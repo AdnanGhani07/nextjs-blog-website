@@ -1,13 +1,10 @@
 import CallToAction from "@/components/CallToAction";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import RecentPosts from "@/components/RecentPosts";
 import Post from "@/lib/models/post.model";
 import { connect } from "@/lib/mongodb/mongoose";
-import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-import { GiQuillInk, GiScrollUnfurled, GiInkSwirl } from "react-icons/gi";
-
+import { FiCalendar, FiClock, FiShare2, FiChevronRight } from "react-icons/fi";
 import { notFound } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -21,7 +18,7 @@ export default async function PostPage(props: {
     await connect();
     post = await Post.findOne({ slug });
   } catch (error) {
-    console.log("Error fetching post:", error);
+    console.error("Error fetching post:", error);
   }
 
   if (!post || post.title === "Failed to load post") {
@@ -29,81 +26,95 @@ export default async function PostPage(props: {
   }
 
   const sanitizedContent = DOMPurify.sanitize(post.content ?? "");
+  const readTime = Math.max(1, Math.ceil((post?.content?.length || 500) / 1000));
 
   return (
-    <main className="flex flex-col max-w-5xl mx-auto min-h-screen py-20 px-6 relative">
-      {/* Ornate Background Elements */}
-      <div className="absolute top-0 left-0 w-32 h-32 border-t-8 border-l-8 border-[#d3a625]/20 pointer-events-none" />
-      <div className="absolute top-0 right-0 w-32 h-32 border-t-8 border-r-8 border-[#d3a625]/20 pointer-events-none" />
+    <main className="flex flex-col max-w-4xl mx-auto min-h-screen py-16 px-6 relative">
+      {/* Breadcrumb Navigation */}
+      <nav className="flex items-center gap-2 text-xs font-cinzel tracking-wider text-muted-foreground mb-8">
+        <Link href="/" className="hover:text-primary transition-colors">
+          Home
+        </Link>
+        <FiChevronRight className="h-3 w-3" />
+        <Link
+          href={`/search?category=${encodeURIComponent(post.category || "all")}`}
+          className="hover:text-primary transition-colors uppercase"
+        >
+          {post.category || "General"}
+        </Link>
+      </nav>
 
-      <div className="space-y-8 text-center relative z-10">
-        <div className="flex justify-center items-center gap-4 mb-4">
-          <div className="h-px w-20 bg-[#d3a625]/40" />
-          <Link
-            href={`/search?category=${post.category}`}
-            className="font-cinzel text-sm font-black tracking-[0.3em] text-[#740001] uppercase hover:underline"
-          >
-            {post.category}
-          </Link>
-          <div className="h-px w-20 bg-[#d3a625]/40" />
+      {/* Post Header Header */}
+      <header className="space-y-6 text-center md:text-left mb-12">
+        <div className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-cinzel font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20">
+          {post.category || "General"}
         </div>
 
-        <h1 className="font-cinzel text-5xl md:text-7xl font-black leading-none text-[#1a0f0a] tracking-tighter">
+        <h1 className="font-cinzel text-4xl sm:text-6xl md:text-7xl font-bold leading-[1.08] text-foreground tracking-tight">
           {post.title}
         </h1>
 
-        <div className="flex flex-col items-center gap-4 pt-4">
-          <GiQuillInk className="h-10 w-10 text-[#740001]" />
-          <div className="flex items-center gap-6 font-serif italic text-lg text-[#1a0f0a] font-bold">
-            <span>
-              Scribed on{" "}
-              {new Date(post.createdAt).toLocaleDateString(undefined, {
-                dateStyle: "long",
-              })}
-            </span>
-            <span className="h-1 w-1 bg-[#d3a625] rounded-full" />
-            <span>{Math.ceil(post?.content?.length / 1000)} min reading</span>
-          </div>
+        {/* Metadata Bar */}
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 pt-4 text-xs font-serif text-muted-foreground border-y border-border/50 py-4">
+          <span className="flex items-center gap-1.5">
+            <FiCalendar className="h-4 w-4 text-primary" />
+            {new Date(post.createdAt).toLocaleDateString(undefined, {
+              dateStyle: "long",
+            })}
+          </span>
         </div>
-      </div>
+      </header>
 
-      <div className="relative mt-16 group overflow-hidden border-[16px] border-double border-[#d3a625]/30 shadow-2xl aspect-[21/9]">
+      {/* Hero Image */}
+      <div className="relative mb-16 rounded-3xl overflow-hidden border border-border/60 shadow-xl aspect-[16/9] w-full bg-muted">
         <Image
-          src={post.image}
+          src={
+            post.image && post.image.trim() !== ""
+              ? post.image
+              : "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80"
+          }
           alt={post.title}
           fill
           priority
-          className="object-cover grayscale-[0.1] sepia-[0.2] transition-transform duration-1000 group-hover:scale-105"
+          unoptimized
+          sizes="(max-width: 1024px) 100vw, 900px"
+          className="object-cover"
         />
-        <div className="absolute inset-0 bg-[#2c1e16]/10 mix-blend-multiply" />
       </div>
 
-      <article className="py-20 font-serif text-xl md:text-2xl leading-[1.8] text-[#1a0f0a] font-medium max-w-3xl mx-auto post-content">
+      {/* Article Content */}
+      <article className="py-8 max-w-3xl mx-auto post-content font-serif text-lg sm:text-xl leading-[1.85] text-foreground/90">
         <div
-          className="first-letter:text-7xl first-letter:font-cinzel first-letter:text-[#740001] first-letter:float-left first-letter:mr-3 first-letter:mt-2"
+          className="first-letter:text-6xl sm:first-letter:text-7xl first-letter:font-cinzel first-letter:text-primary first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-bold"
           dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       </article>
 
-      <div className="flex justify-center py-12">
-        <GiScrollUnfurled className="h-12 w-12 text-[#d3a625]/40" />
+      {/* Section Divider */}
+      <div className="my-16 flex items-center justify-center">
+        <div className="h-px w-32 bg-border" />
       </div>
 
-      <div className="w-full py-20 bg-[#2c1e16]/5 border-y-8 border-double border-[#d3a625]/20">
-        <div className="max-w-4xl mx-auto px-6">
-          <CallToAction />
-        </div>
+      {/* Call To Action */}
+      <div className="w-full my-12">
+        <CallToAction />
       </div>
 
-      <div className="py-32 w-full">
-        <div className="flex flex-col items-center gap-4 text-center mb-16">
-          <h2 className="font-cinzel text-4xl font-bold tracking-tighter text-[#1a0f0a]">
-            Related Scrolls
+      {/* Related Posts */}
+      <section className="py-16 w-full">
+        <div className="flex items-center justify-between mb-10 border-b border-border/50 pb-4">
+          <h2 className="font-cinzel text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            Related Pieces
           </h2>
-          <div className="h-1 w-20 bg-[#740001]" />
+          <Link
+            href="/search"
+            className="text-xs font-cinzel font-bold text-primary hover:underline uppercase tracking-wider"
+          >
+            All Archives →
+          </Link>
         </div>
         <RecentPosts limit={3} />
-      </div>
+      </section>
     </main>
   );
 }
