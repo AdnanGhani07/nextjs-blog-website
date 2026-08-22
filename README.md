@@ -102,16 +102,21 @@ The application requires the following environment variables configured in `.env
 # Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 CLERK_WEBHOOK_SIGNING_SECRET=whsec_...
 
 # MongoDB Database
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority
 
+# Site Deployment URL (SEO, Sitemap & RSS feeds)
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
 # Cloudinary Storage
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 
-# Gemini AI (Blog Generation)
+# Gemini AI (Blog Generation & Literary Analysis)
 GEMINI_API_KEY=AIzaSy...
 
 # Cron Job Secret Authorization

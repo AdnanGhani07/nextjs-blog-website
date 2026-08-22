@@ -52,6 +52,7 @@ export default function Header() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Collections", href: "/collections" },
+    { name: "Saved", href: "/bookmarks" },
     { name: "Write", href: "/dashboard/create-post" },
   ];
 
@@ -131,8 +132,9 @@ export default function Header() {
           {/* Authentication */}
           <div className="flex items-center gap-3">
             <SignedIn>
-              <div className="p-0.5 rounded-full border border-border/80 shadow-sm">
+              <div className="flex items-center justify-center rounded-full border border-border/80 hover:border-primary/50 transition-all p-0.5">
                 <UserButton
+                  key={isDarkMode ? "clerk-dark" : "clerk-light"}
                   appearance={{
                     baseTheme: isDarkMode ? dark : undefined,
                     variables: {
@@ -140,26 +142,8 @@ export default function Header() {
                       borderRadius: "0.75rem",
                     },
                     elements: {
-                      userButtonAvatarBox: "h-8 w-8",
-                      userButtonPopoverFooter: "hidden",
-                      userButtonPopoverCard: isDarkMode
-                        ? "!bg-[#141417] !text-[#f4f4f5] border border-white/10 shadow-2xl overflow-hidden"
-                        : "!bg-white !text-[#18181b] border border-black/10 shadow-2xl overflow-hidden",
-                      userButtonPopoverActionButton: isDarkMode
-                        ? "!text-[#f4f4f5] hover:!bg-[#202026]"
-                        : "!text-[#18181b] hover:!bg-black/5",
-                      userButtonPopoverActionButtonText: isDarkMode
-                        ? "!text-[#f4f4f5]"
-                        : "!text-[#18181b]",
-                      userButtonPopoverActionButtonIcon: isDarkMode
-                        ? "!text-[#f4f4f5]"
-                        : "!text-[#18181b]",
-                      userPreviewMainIdentifier: isDarkMode
-                        ? "!text-[#f4f4f5] font-bold"
-                        : "!text-[#18181b] font-bold",
-                      userPreviewSecondaryIdentifier: isDarkMode
-                        ? "!text-[#a1a1aa]"
-                        : "!text-[#71717a]",
+                      userButtonAvatarBox: "h-8 w-8 rounded-full",
+                      userButtonTrigger: "focus:shadow-none focus:outline-none flex items-center justify-center",
                     },
                   }}
                   userProfileUrl="/dashboard?tab=profile"

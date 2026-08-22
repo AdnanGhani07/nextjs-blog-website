@@ -119,7 +119,157 @@
 }
 
 .post-content p {
-  @apply mb-6 font-serif text-lg md:text-xl leading-[1.85];
+  @apply mb-6 leading-[1.85];
+}
+
+/* =========================================================
+   Reader Mode Typography & Paper Warmth Themes
+   ========================================================= */
+.theme-sepia {
+  --background: 40 40% 93% !important;        /* #f6f0e2 Warm Parchment */
+  --foreground: 30 35% 15% !important;        /* #2c2216 Deep Espresso Ink */
+  --card: 38 35% 88% !important;              /* #ebe0cc */
+  --card-foreground: 30 35% 15% !important;
+  --popover: 38 35% 88% !important;
+  --popover-foreground: 30 35% 15% !important;
+  --muted: 36 25% 82% !important;             /* #dbccb5 */
+  --muted-foreground: 30 18% 38% !important;  /* #655747 Crisp Sepia Muted */
+  --border: 36 25% 76% !important;            /* #ccbba1 */
+  --primary: 346 75% 35% !important;          /* #9e1735 */
+  --primary-foreground: 0 0% 100% !important;
+  --secondary: 38 85% 42% !important;
+  --secondary-foreground: 30 35% 15% !important;
+
+  background-color: #f6f0e2 !important;
+  color: #2c2216 !important;
+}
+
+.theme-sepia h1,
+.theme-sepia h2,
+.theme-sepia h3,
+.theme-sepia h4,
+.theme-sepia .post-content,
+.theme-sepia .post-content p,
+.theme-sepia article {
+  color: #2c2216 !important;
+}
+
+.theme-sepia .text-muted-foreground,
+.theme-sepia .text-muted-foreground * {
+  color: #655747 !important;
+}
+
+.theme-sepia .editorial-gradient-text {
+  background: linear-gradient(to right, #9e1735, #b45309, #9e1735) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.theme-sepia .bg-card,
+.theme-sepia [class*="bg-card"] {
+  background-color: #ebe0cc !important;
+  border-color: #ccbba1 !important;
+  color: #2c2216 !important;
+}
+
+.theme-sepia .bg-muted,
+.theme-sepia [class*="bg-muted"] {
+  background-color: #dfd0ba !important;
+  border-color: #ccbba1 !important;
+}
+
+.theme-slate {
+  --background: 222 47% 11% !important;       /* #0f172a Deep Slate Charcoal */
+  --foreground: 210 40% 98% !important;       /* #f8fafc Bright Crisp Text */
+  --card: 217 33% 17% !important;             /* #1e293b */
+  --card-foreground: 210 40% 98% !important;
+  --popover: 217 33% 17% !important;
+  --popover-foreground: 210 40% 98% !important;
+  --muted: 215 28% 24% !important;            /* #334155 */
+  --muted-foreground: 215 20% 70% !important; /* #a8b6cc */
+  --border: 215 25% 27% !important;           /* #334155 */
+  --primary: 346 87% 55% !important;          /* #f43f5e */
+  --primary-foreground: 0 0% 100% !important;
+  --secondary: 38 92% 50% !important;
+  --secondary-foreground: 222 47% 11% !important;
+
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+.theme-slate h1,
+.theme-slate h2,
+.theme-slate h3,
+.theme-slate h4,
+.theme-slate .post-content,
+.theme-slate .post-content p,
+.theme-slate article {
+  color: #f8fafc !important;
+}
+
+.theme-slate .text-muted-foreground,
+.theme-slate .text-muted-foreground * {
+  color: #a8b6cc !important;
+}
+
+.theme-slate .editorial-gradient-text {
+  background: linear-gradient(to right, #f43f5e, #fbbf24, #f43f5e) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.theme-slate .bg-card,
+.theme-slate [class*="bg-card"] {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.theme-slate .bg-muted,
+.theme-slate [class*="bg-muted"] {
+  background-color: #273549 !important;
+  border-color: #334155 !important;
+}
+
+/* Typography Overrides */
+.reader-font-serif,
+.reader-font-serif p,
+.reader-font-serif div {
+  font-family: var(--font-playfair), Georgia, serif !important;
+}
+
+.reader-font-sans,
+.reader-font-sans p,
+.reader-font-sans div {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.reader-font-mono,
+.reader-font-mono p,
+.reader-font-mono div {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+/* Font Size Overrides */
+.reader-size-sm,
+.reader-size-sm p {
+  font-size: 1rem !important;
+  line-height: 1.75 !important;
+}
+.reader-size-md,
+.reader-size-md p {
+  font-size: 1.18rem !important;
+  line-height: 1.85 !important;
+}
+.reader-size-lg,
+.reader-size-lg p {
+  font-size: 1.38rem !important;
+  line-height: 1.95 !important;
+}
+.reader-size-xl,
+.reader-size-xl p {
+  font-size: 1.65rem !important;
+  line-height: 2.05 !important;
 }
 
 .post-content h2 {
@@ -166,111 +316,137 @@
   display: none !important;
 }
 
-/* Ensure Clerk Popovers and UserProfile match dark mode */
-.dark .cl-userButtonPopoverCard,
-.dark .cl-userButtonPopoverRoot,
-.dark [class*="cl-userButtonPopoverCard"],
-.dark [class*="userButton-popover"],
-.dark [class*="userButtonPopoverCard"],
-.dark .cl-userProfile-root,
-.dark .cl-userProfile-root .cl-card,
-.dark .cl-userProfile-root .cl-navbar,
-.dark .cl-userProfile-root .cl-navbarContainer,
-.dark .cl-userProfile-root .cl-scrollBox,
-.dark .cl-pageScrollBox,
-.dark [class*="pageScrollBox"],
-.dark [class*="navbarContainer"],
-.dark .cl-card {
-  background-color: #141417 !important;
-  background: #141417 !important;
+/* =========================================================
+   Universal Bulletproof Clerk Dark Mode Styling
+   ========================================================= */
+html.dark .cl-userButton-popover,
+html.dark .cl-userButtonPopoverRoot,
+html.dark .cl-userButtonPopoverCard,
+html.dark .cl-userButtonPopoverMain,
+html.dark .cl-popoverBox,
+html.dark .cl-card,
+html.dark [class*="cl-userButtonPopover"],
+html.dark [class*="userButton-popover"],
+html.dark [class*="userButtonPopoverCard"],
+html.dark [class*="cl-card"],
+html.dark [class*="popoverBox"],
+html.dark .cl-userProfile-root,
+html.dark .cl-userProfile-root .cl-card,
+html.dark .cl-modalContent {
+  background-color: #121215 !important;
+  background: #121215 !important;
   color: #f4f4f5 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+}
+
+html.dark .cl-navbar,
+html.dark .cl-navbarContainer,
+html.dark .cl-scrollBox,
+html.dark [class*="cl-navbar"] {
+  background-color: #0c0c0e !important;
+  background: #0c0c0e !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.dark .cl-navbar,
-.dark .cl-navbarContainer,
-.dark .cl-scrollBox,
-.dark [class*="cl-navbar"] {
-  background-color: #0e0e11 !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.dark .cl-navbarTitle,
-.dark [class*="navbarTitle"] {
+html.dark .cl-navbarTitle,
+html.dark [class*="navbarTitle"] {
   color: #f4f4f5 !important;
   font-family: var(--font-cinzel), serif !important;
   font-weight: 700 !important;
 }
 
-.dark .cl-navbarSubtitle,
-.dark [class*="navbarSubtitle"] {
+html.dark .cl-navbarSubtitle,
+html.dark [class*="navbarSubtitle"] {
   color: #a1a1aa !important;
   font-family: var(--font-playfair), serif !important;
 }
 
-.dark .cl-navbarButton,
-.dark .cl-navbarButtonText,
-.dark .cl-navbarButtonIcon,
-.dark [class*="navbarButton"],
-.dark [class*="navbarButtonText"],
-.dark [class*="navbarButtonIcon"] {
+html.dark .cl-navbarButton,
+html.dark .cl-navbarButtonText,
+html.dark .cl-navbarButtonIcon,
+html.dark [class*="navbarButton"],
+html.dark [class*="navbarButtonText"],
+html.dark [class*="navbarButtonIcon"] {
   color: #f4f4f5 !important;
 }
 
-.dark .cl-navbarButton[data-active="true"],
-.dark [class*="navbarButton"][data-active="true"] {
+html.dark .cl-navbarButton[data-active="true"],
+html.dark [class*="navbarButton"][data-active="true"] {
   background-color: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
 }
 
-.dark .cl-navbarButton:hover,
-.dark [class*="navbarButton"]:hover {
+html.dark .cl-navbarButton:hover,
+html.dark [class*="navbarButton"]:hover {
   color: #ffffff !important;
   background-color: rgba(255, 255, 255, 0.06) !important;
 }
 
-.dark .cl-profileSection,
-.dark [class*="profileSection"] {
+html.dark .cl-profileSection,
+html.dark [class*="profileSection"] {
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-.dark .cl-userButtonPopoverActionButton,
-.dark .cl-userButtonPopoverActionButtonText,
-.dark .cl-userButtonPopoverActionButtonIcon,
-.dark .cl-userPreviewMainIdentifier,
-.dark .cl-headerTitle,
-.dark .cl-formFieldLabel,
-.dark .cl-profileSectionTitleText,
-.dark .cl-profileSectionPrimaryDescription,
-.dark .cl-profileSectionContent,
-.dark .cl-profileSectionContent *,
-.dark .cl-profileSectionPrimaryButton,
-.dark [class*="profileSectionPrimaryButton"],
-.dark [class*="profileSectionPrimaryDescription"],
-.dark .cl-userProfile-root h1,
-.dark .cl-userProfile-root h2,
-.dark .cl-userProfile-root h3,
-.dark .cl-userProfile-root [class*="Title"],
-.dark .cl-userProfile-root [class*="title"] {
-  color: #f4f4f5 !important;
+/* User Button Menu Items & Labels */
+html.dark .cl-userButtonPopoverActionButton,
+html.dark [class*="userButtonPopoverActionButton"] {
+  color: #e4e4e7 !important;
 }
 
-.dark .cl-userProfile-root [class*="navbarButtonText"],
-.dark .cl-userProfile-root [class*="navbarButton"] span,
-.dark .cl-userProfile-root [class*="navbarButton"] p,
-.dark .cl-userProfile-root [class*="navbarButton"] svg {
-  color: #f4f4f5 !important;
-  fill: #f4f4f5 !important;
+html.dark .cl-userButtonPopoverActionButton:hover,
+html.dark [class*="userButtonPopoverActionButton"]:hover {
+  background-color: #202026 !important;
+  color: #ffffff !important;
 }
 
-.dark .cl-userPreviewSecondaryIdentifier,
-.dark .cl-headerSubtitle,
-.dark .cl-profileSectionTitle,
-.dark [class*="userPreviewSecondaryIdentifier"] {
+html.dark .cl-userButtonPopoverActionButtonText,
+html.dark [class*="userButtonPopoverActionButtonText"],
+html.dark .cl-userButtonPopoverActionButtonIcon,
+html.dark [class*="userButtonPopoverActionButtonIcon"] {
+  color: #e4e4e7 !important;
+  fill: #e4e4e7 !important;
+}
+
+html.dark .cl-userPreviewMainIdentifier,
+html.dark [class*="userPreviewMainIdentifier"],
+html.dark [class*="userPreview"] h1,
+html.dark [class*="userPreview"] span:first-child {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+html.dark .cl-userPreviewSecondaryIdentifier,
+html.dark [class*="userPreviewSecondaryIdentifier"] {
   color: #a1a1aa !important;
 }
 
-.dark .cl-userButtonPopoverActionButton:hover,
-.dark [class*="userButtonPopoverActionButton"]:hover {
-  background-color: #202026 !important;
+html.dark .cl-userPreviewAvatarContainer,
+html.dark .cl-avatarBox {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+html.dark .cl-headerTitle,
+html.dark .cl-formFieldLabel,
+html.dark .cl-profileSectionTitleText,
+html.dark .cl-profileSectionPrimaryDescription,
+html.dark .cl-profileSectionContent,
+html.dark .cl-profileSectionContent *,
+html.dark .cl-profileSectionPrimaryButton,
+html.dark [class*="profileSectionPrimaryButton"],
+html.dark [class*="profileSectionPrimaryDescription"],
+html.dark .cl-userProfile-root h1,
+html.dark .cl-userProfile-root h2,
+html.dark .cl-userProfile-root h3,
+html.dark .cl-userProfile-root [class*="Title"],
+html.dark .cl-userProfile-root [class*="title"] {
+  color: #f4f4f5 !important;
+}
+
+html.dark .cl-userProfile-root [class*="navbarButtonText"],
+html.dark .cl-userProfile-root [class*="navbarButton"] span,
+html.dark .cl-userProfile-root [class*="navbarButton"] p,
+html.dark .cl-userProfile-root [class*="navbarButton"] svg {
+  color: #f4f4f5 !important;
+  fill: #f4f4f5 !important;
 }

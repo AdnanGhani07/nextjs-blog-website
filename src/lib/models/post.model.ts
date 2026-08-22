@@ -7,6 +7,12 @@ export interface IPost extends Document {
     image: string;
     category: string;
     slug: string;
+    claps?: number;
+    formatType?: 'standard' | 'poetry' | 'essay' | 'serialized';
+    seriesTitle?: string;
+    chapterNumber?: number;
+    aiSummary?: string;
+    aiThemes?: string[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -39,6 +45,28 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+    },
+    claps: {
+      type: Number,
+      default: 0,
+    },
+    formatType: {
+      type: String,
+      enum: ['standard', 'poetry', 'essay', 'serialized'],
+      default: 'standard',
+    },
+    seriesTitle: {
+      type: String,
+    },
+    chapterNumber: {
+      type: Number,
+    },
+    aiSummary: {
+      type: String,
+    },
+    aiThemes: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true }

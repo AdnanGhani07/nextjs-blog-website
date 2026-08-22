@@ -8,6 +8,7 @@ export interface IUser extends Document {
     username: string;
     profilePicture?: string;
     isAdmin: boolean;
+    bookmarks?: string[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -43,6 +44,10 @@ const UserSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false,
+    },
+    bookmarks: {
+        type: [String],
+        default: [],
     },
 }, {
     timestamps: true,
